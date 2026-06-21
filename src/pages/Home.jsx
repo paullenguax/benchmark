@@ -1,0 +1,69 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+export default function Home() {
+  const navigate = useNavigate()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+
+  function handleStart() {
+    navigate('/test', { state: { candidateName: name.trim(), candidateEmail: email.trim() } })
+  }
+
+  return (
+    <div className="page home">
+      <a href="#main-content" className="skip-link">Skip to content</a>
+
+      <header className="home-header">
+        <h1>Aviation English Benchmark</h1>
+        <p className="tagline">Indicative ICAO language proficiency screening</p>
+      </header>
+
+      <main id="main-content">
+        <section className="home-intro" aria-label="About this test">
+          <p>
+            This free screener gives an indicative ICAO language proficiency level (4, 5, or 6)
+            based on reading and listening comprehension. It takes approximately 20–30 minutes.
+          </p>
+          <p>
+            The test adapts to your performance: an initial set of items establishes your baseline,
+            then subsequent items target your indicated level for confirmation.
+          </p>
+          <p className="disclaimer-small">
+            This is not a formal ICAO assessment. It does not test speaking, writing, pronunciation, or fluency.
+          </p>
+        </section>
+
+        <section className="candidate-section" aria-labelledby="before-heading">
+          <h2 id="before-heading">Before you begin</h2>
+          <p>Name and email are optional. If provided, your result can be linked to a future ICAO assessment for validity research.</p>
+          <div className="field-group">
+            <label htmlFor="name">Name (optional)</label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Your full name"
+              autoComplete="name"
+            />
+          </div>
+          <div className="field-group">
+            <label htmlFor="email">Email (optional)</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              autoComplete="email"
+            />
+          </div>
+          <button className="btn-start" onClick={handleStart}>
+            Start Test
+          </button>
+        </section>
+      </main>
+    </div>
+  )
+}
