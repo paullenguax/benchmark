@@ -374,24 +374,23 @@ const MOCK_ITEMS = [
 ]
 
 export async function fetchItems() {
-  const q = query(collection(db, 'items'), where('active', '==', true))
+  const q = query(collection(db, 'benchmark_items'), where('active', '==', true))
   const snap = await getDocs(q)
   if (!snap.empty) return snap.docs.map(d => ({ id: d.id, ...d.data() }))
-  // Fall back to mock data when Firestore is empty (development / seeding phase)
   return MOCK_ITEMS
 }
 
 export async function fetchAllItems() {
-  const snap = await getDocs(collection(db, 'items'))
+  const snap = await getDocs(collection(db, 'benchmark_items'))
   if (!snap.empty) return snap.docs.map(d => ({ id: d.id, ...d.data() }))
   return MOCK_ITEMS
 }
 
 export async function saveItem(item) {
-  const ref = await addDoc(collection(db, 'items'), { ...item, createdAt: serverTimestamp() })
+  const ref = await addDoc(collection(db, 'benchmark_items'), { ...item, createdAt: serverTimestamp() })
   return ref.id
 }
 
 export async function updateItem(id, fields) {
-  await setDoc(doc(db, 'items', id), fields, { merge: true })
+  await setDoc(doc(db, 'benchmark_items', id), fields, { merge: true })
 }
