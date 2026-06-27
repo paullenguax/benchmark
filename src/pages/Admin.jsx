@@ -380,18 +380,22 @@ function ItemBankTab() {
   const [view, setView] = useState('list')
   const [editTarget, setEditTarget] = useState(null)
   const [seeding, setSeeding] = useState(false)
+  const [seedError, setSeedError] = useState(null)
 
   useEffect(() => {
-    fetchAllItems().then(setItems)
+    fetchAllItems().then(setItems).catch(err => setItems([]))
   }, [])
 
   async function handleSeed() {
     if (!confirm(`Write all ${rawItems.items.length} items from JSON into Firestore? Existing items with the same IDs will be overwritten.`)) return
     setSeeding(true)
+    setSeedError(null)
     try {
       await seedItemsFromJson()
       const fresh = await fetchAllItems()
       setItems(fresh)
+    } catch (err) {
+      setSeedError(err.message)
     } finally {
       setSeeding(false)
     }
@@ -431,6 +435,16 @@ function ItemBankTab() {
 
   return (
     <div>
+      {seedError && (
+        <p className="admin-error" style={{ marginBottom: '1rem' }}>
+          Seed failed: {seedError}
+        </p>
+      )}
+      {items.length === 0 && !seedError && (
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '0.875rem' }}>
+          No items in Firestore yet — click "↑ Seed from JSON" to load all 80 items.
+        </p>
+      )}
       <div className="list-toolbar" style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <select value={filterBand} onChange={e => setFilterBand(e.target.value)}>
