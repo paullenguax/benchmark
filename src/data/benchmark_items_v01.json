@@ -1,0 +1,1612 @@
+{
+  "meta": {
+    "version": "0.1-trial",
+    "description": "Lenguax Aviation English Benchmark — reading item bank (vocabulary + structure). Listening items to follow.",
+    "totalItems": 80,
+    "bands": {
+      "4": "B1 operational minimum",
+      "5": "B2 extended proficiency",
+      "6": "C1 expert proficiency"
+    },
+    "fields": {
+      "id": "unique item identifier",
+      "source": "new (purpose-written) or original (from Storyline bank)",
+      "band": "target ICAO level band (4, 5 or 6)",
+      "construct": "vocabulary or structure",
+      "modality": "reading or listening",
+      "stem": "question stem text",
+      "options": "array of answer options (text only)",
+      "correct": "0-based index of correct option in options array",
+      "feedback": "explanation shown to candidate after answering",
+      "active": "include in live item pool",
+      "flagged": "set to true by candidate feedback system",
+      "notes": "admin notes"
+    }
+  },
+  "items": [
+    {
+      "id": "new_001",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe pilot asked the controller to ______ the clearance because there was a lot of interference on the frequency.",
+      "options": [
+        "repeat",
+        "say again",
+        "retell",
+        "restate"
+      ],
+      "correct": 1,
+      "feedback": "'Retell' and 'restate' are not used in spoken communication about radio messages. 'Say again' is the most natural plain English phrase in this context.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_002",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe aircraft had to ______ fuel before the long transatlantic flight.",
+      "options": [
+        "top up",
+        "fill in",
+        "load up",
+        "pump out"
+      ],
+      "correct": 0,
+      "feedback": "'Top up' is the correct collocation when adding fuel. 'Fill in' is used for forms, 'load up' for cargo, and 'pump out' means to remove liquid.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_003",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nPassengers must remain in their seats until the aircraft comes to a complete ______.",
+      "options": [
+        "stop",
+        "standstill",
+        "finish",
+        "pause"
+      ],
+      "correct": 1,
+      "feedback": "'Standstill' is the correct word. We say 'come to a standstill' or 'come to a complete stop'. 'Finish' and 'pause' do not collocate with 'come to a'.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_004",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe cabin crew asked passengers to ______ their seatbelts before takeoff.",
+      "options": [
+        "fasten",
+        "fix",
+        "attach",
+        "lock"
+      ],
+      "correct": 0,
+      "feedback": "We 'fasten' a seatbelt. 'Fix' means to repair, 'attach' is used for objects like labels, and 'lock' implies a key.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_005",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe weather at the destination was ______, so the flight was diverted.",
+      "options": [
+        "below limits",
+        "under limits",
+        "beneath limits",
+        "below standard"
+      ],
+      "correct": 0,
+      "feedback": "We say weather is 'below limits' when it does not meet the minimum requirements for landing. 'Under', 'beneath' and 'below standard' are not used in this context.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_006",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe engineer carried out a ______ inspection of the aircraft before departure.",
+      "options": [
+        "thorough",
+        "deep",
+        "strong",
+        "wide"
+      ],
+      "correct": 0,
+      "feedback": "'Thorough' means complete and careful, and collocates naturally with 'inspection'. 'Deep', 'strong' and 'wide' do not collocate with 'inspection' in this way.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_007",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe report said the incident happened ______ a series of small errors.",
+      "options": [
+        "as a result of",
+        "by cause of",
+        "in result to",
+        "for the reason"
+      ],
+      "correct": 0,
+      "feedback": "'As a result of' is the correct expression. 'By cause of', 'in result to' and 'for the reason' are not standard English expressions.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_008",
+      "source": "new",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe two pilots ______ who would fly the first sector.",
+      "options": [
+        "agreed on",
+        "agreed about",
+        "agreed for",
+        "agreed to"
+      ],
+      "correct": 0,
+      "feedback": "We 'agree on' a specific decision or plan. 'Agree to' means to consent to something proposed by someone else, which changes the meaning here.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_009",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThere ______ any delays on the ground today, so we departed on time.",
+      "options": [
+        "weren't",
+        "wasn't",
+        "wasn't any",
+        "weren't some"
+      ],
+      "correct": 0,
+      "feedback": "'Delays' is plural, so we need 'weren't'. 'Wasn't' is used with singular nouns. 'Weren't some' is incorrect — we use 'any' in negative sentences.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_010",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe controller told the pilot ______ at 5,000 feet.",
+      "options": [
+        "to level off",
+        "levelling off",
+        "level off",
+        "that level off"
+      ],
+      "correct": 0,
+      "feedback": "After 'told someone', we use 'to + infinitive'. So 'told the pilot to level off' is correct.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_011",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nBy the time the fire crew arrived, the aircraft ______ already stopped on the runway.",
+      "options": [
+        "had",
+        "has",
+        "have",
+        "was"
+      ],
+      "correct": 0,
+      "feedback": "When one past event happens before another past event, we use the past perfect: 'had already stopped'.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_012",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nPassengers ______ use electronic devices during takeoff and landing.",
+      "options": [
+        "must not",
+        "do not have to",
+        "need not",
+        "should not have to"
+      ],
+      "correct": 0,
+      "feedback": "'Must not' expresses prohibition — it is forbidden. 'Do not have to' and 'need not' mean it is not necessary, but it is still allowed. These have very different meanings.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_013",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe maintenance team ______ on the aircraft for six hours when the fault was finally found.",
+      "options": [
+        "had been working",
+        "have been working",
+        "were working",
+        "worked"
+      ],
+      "correct": 0,
+      "feedback": "'Had been working' shows that an activity was in progress over a period of time before a specific past event. We use past perfect continuous for this.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_014",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nIt was the ______ long-haul flight the crew had operated that month.",
+      "options": [
+        "third",
+        "three",
+        "three's",
+        "thirdly"
+      ],
+      "correct": 0,
+      "feedback": "Ordinal numbers (first, second, third) are used to describe position in a sequence. 'Three' is a cardinal number and cannot be used to modify a noun in this way.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_015",
+      "source": "new",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe investigation is looking into the reasons ______ the engine failed.",
+      "options": [
+        "why",
+        "that",
+        "for which",
+        "because"
+      ],
+      "correct": 0,
+      "feedback": "'Why' is the most natural word to introduce a clause after 'reasons'. 'Because' introduces a reason clause but cannot follow 'reasons' in this structure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_016",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe captain ______ her concerns about the weather to the dispatcher before departure.",
+      "options": [
+        "conveyed",
+        "transmitted",
+        "broadcast",
+        "forwarded"
+      ],
+      "correct": 0,
+      "feedback": "'Convey' is used when communicating thoughts, feelings, or information to someone directly. The others have more specific meanings: transmit (signals), broadcast (to many), forward (pass on).",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_017",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe new scheduling system ______ significant improvements in turnaround times.",
+      "options": [
+        "yielded",
+        "produced",
+        "gave",
+        "brought"
+      ],
+      "correct": 0,
+      "feedback": "'Yielded' is the most precise and formal word here, used when describing documented results or outcomes. 'Brought' would need 'about' after it to be correct.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_018",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe investigation found that the crew's response to the emergency was ______ with standard procedures.",
+      "options": [
+        "consistent",
+        "constant",
+        "persistent",
+        "resistant"
+      ],
+      "correct": 0,
+      "feedback": "'Consistent with' means in agreement with or matching. 'Constant' means unchanging. 'Persistent' means continuing. 'Resistant' means opposing. Only 'consistent' works here.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_019",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe incident report ______ a number of weaknesses in the crew resource management training.",
+      "options": [
+        "highlighted",
+        "lightened",
+        "underlined",
+        "shone on"
+      ],
+      "correct": 0,
+      "feedback": "'Highlighted' is the natural verb for drawing attention to issues in a report. 'Underline' can sometimes work metaphorically, but 'highlight' is more natural here. 'Lightened' and 'shone on' are not used this way.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_020",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nFatigue can ______ a pilot's ability to make good decisions, especially during long sectors.",
+      "options": [
+        "impair",
+        "damage",
+        "harm",
+        "break"
+      ],
+      "correct": 0,
+      "feedback": "'Impair' is the precise word for reducing the effectiveness of a mental or physical faculty. 'Damage' and 'harm' are more general and physical. 'Break' implies complete failure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_021",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe airline ______ new safety measures following the accident investigation.",
+      "options": [
+        "implemented",
+        "applied",
+        "executed",
+        "performed"
+      ],
+      "correct": 0,
+      "feedback": "'Implemented' is the standard word for putting new measures, policies or systems into practice. 'Executed' and 'performed' refer to carrying out specific actions, not introducing new procedures.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_022",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe crew was ______ of the icing conditions ahead and adjusted their route accordingly.",
+      "options": [
+        "aware",
+        "conscious",
+        "informed",
+        "knowledgeable"
+      ],
+      "correct": 0,
+      "feedback": "'Aware of' is the most natural choice for knowing about a condition. 'Informed of' suggests someone told them rather than them noticing. 'Knowledgeable' takes 'about', not 'of'.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_023",
+      "source": "new",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe commander decided to ______ the departure until the technical fault had been resolved.",
+      "options": [
+        "postpone",
+        "delay",
+        "suspend",
+        "cancel"
+      ],
+      "correct": 2,
+      "feedback": "'Suspend' means to officially stop something temporarily. 'Postpone' implies rescheduling to a specific new time. 'Delay' suggests being late rather than a deliberate halt. 'Cancel' means to stop permanently.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_024",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe passengers ______ that the delay was due to a technical problem.",
+      "options": [
+        "were informed",
+        "were told",
+        "had notified",
+        "were notifying"
+      ],
+      "correct": 0,
+      "feedback": "'Were informed' is the formal passive. 'Were told' also works but is less formal. 'Had notified' would mean the passengers notified someone else, which is wrong.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_025",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nHad the crew received the updated weather briefing, they ______ a different route.",
+      "options": [
+        "would have chosen",
+        "would choose",
+        "had chosen",
+        "will have chosen"
+      ],
+      "correct": 0,
+      "feedback": "This sentence uses an inverted conditional: 'Had the crew received...' = 'If the crew had received...'. The result clause uses 'would have chosen' because we are talking about a hypothetical past situation.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_026",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe report recommended that additional training ______ provided to all new hires.",
+      "options": [
+        "be",
+        "was",
+        "should be",
+        "is"
+      ],
+      "correct": 0,
+      "feedback": "After 'recommend that', we use the subjunctive form — the base form of the verb without 'to': 'that training be provided'. This is called the mandative subjunctive.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_027",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\n______ the cause of the fault, the aircraft was grounded pending a full inspection.",
+      "options": [
+        "Whatever",
+        "However",
+        "Whenever",
+        "Wherever"
+      ],
+      "correct": 0,
+      "feedback": "'Whatever the cause' means 'regardless of what the cause was'. 'However' must be followed by an adjective or adverb, not a noun.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_028",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe engineer denied ______ the fault before the flight departed.",
+      "options": [
+        "having noticed",
+        "to have noticed",
+        "that he noticed",
+        "noticing"
+      ],
+      "correct": 0,
+      "feedback": "'Deny + having + past participle' (perfect gerund) is used when the denied action happened before the denying. 'Deny to have noticed' is not standard English.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_029",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe new procedures are designed to reduce the ______ of such incidents occurring in future.",
+      "options": [
+        "likelihood",
+        "probability",
+        "chance",
+        "risk"
+      ],
+      "correct": 0,
+      "feedback": "All four words can work here, but 'likelihood' is the most precise and formal term used in safety documentation. Understanding register distinction is part of Band 5 competence.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_030",
+      "source": "new",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nNot until the second officer noticed the discrepancy ______ that something was wrong.",
+      "options": [
+        "did the captain realise",
+        "the captain realised",
+        "had the captain realised",
+        "the captain had realised"
+      ],
+      "correct": 0,
+      "feedback": "When 'not until' starts a sentence, we invert the subject and auxiliary: 'Not until... did the captain realise'. This is called negative inversion and is a formal grammatical structure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_031",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe committee's findings were ______ — they confirmed what the safety team had suspected for years.",
+      "options": [
+        "corroborative",
+        "supportive",
+        "confirmatory",
+        "collaborative"
+      ],
+      "correct": 0,
+      "feedback": "'Corroborative' is the precise formal term for findings that confirm existing suspicions or evidence. 'Collaborative' means working together, which is a different meaning entirely.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_032",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe airline's safety culture had become ______ — staff no longer reported minor issues because they assumed nothing would be done.",
+      "options": [
+        "complacent",
+        "compliant",
+        "placid",
+        "content"
+      ],
+      "correct": 0,
+      "feedback": "'Complacent' describes a dangerous state where people feel too comfortable and stop being vigilant. 'Compliant' means following rules, which is the opposite of the problem described.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_033",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe accident was ______ to a combination of factors rather than any single cause.",
+      "options": [
+        "attributed",
+        "accredited",
+        "ascribed",
+        "assigned"
+      ],
+      "correct": 0,
+      "feedback": "'Attributed to' is the standard investigative term for identifying causes. 'Accredited' means officially recognised or certified — a common confusion. 'Ascribed' is similar to 'attributed' but more literary.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_034",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe regulator's decision to ground the fleet was seen as ______ given the evidence available at the time.",
+      "options": [
+        "judicious",
+        "judicial",
+        "juridical",
+        "judgemental"
+      ],
+      "correct": 0,
+      "feedback": "'Judicious' means showing good judgement and wisdom. 'Judicial' relates to courts and law. 'Judgemental' has a negative connotation — it means unfairly critical of others.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_035",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe inquiry's report was ______ in its criticism of the maintenance contractor.",
+      "options": [
+        "scathing",
+        "scattered",
+        "scaring",
+        "scorching"
+      ],
+      "correct": 0,
+      "feedback": "'Scathing' means severely and harshly critical. It is commonly used in formal writing to describe very negative assessments or reports.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_036",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe two airports are ______ — their operational models could not be more different.",
+      "options": [
+        "poles apart",
+        "worlds away",
+        "miles off",
+        "far removed"
+      ],
+      "correct": 0,
+      "feedback": "'Poles apart' is the precise fixed idiom meaning completely different. 'Miles off' means far from correct, not far from each other. 'Far removed' is more formal and means distant from rather than different from.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_037",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe captain's decision, ______ as it seemed at the time, ultimately proved to be the right one.",
+      "options": [
+        "counterintuitive",
+        "contradictory",
+        "controversial",
+        "contrary"
+      ],
+      "correct": 0,
+      "feedback": "'Counterintuitive' means going against what instinct suggests, but being correct anyway. 'Controversial' means causing disagreement. 'Contradictory' means self-contradicting.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_038",
+      "source": "new",
+      "band": 6,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate word to complete the sentence:\nThe findings of the two independent investigations were ______ — each reached the same conclusion without knowing the other's results.",
+      "options": [
+        "convergent",
+        "concurrent",
+        "coincident",
+        "congruent"
+      ],
+      "correct": 0,
+      "feedback": "'Convergent' describes things that move towards the same point from different directions — perfect for independent investigations that reach the same conclusion. 'Concurrent' simply means happening at the same time.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_039",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\n______ the investigation team to find conclusive evidence, the case would have been closed much sooner.",
+      "options": [
+        "Were",
+        "Had",
+        "Should",
+        "Would"
+      ],
+      "correct": 0,
+      "feedback": "'Were the investigation team to find...' is a formal inverted conditional, equivalent to 'If the investigation team had found...'. 'Were to' is used in formal writing for hypothetical conditions.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_040",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nIt was not until the black box was recovered ______ the true sequence of events became clear.",
+      "options": [
+        "that",
+        "when",
+        "which",
+        "then"
+      ],
+      "correct": 0,
+      "feedback": "'It was not until... that...' is a fixed cleft structure used to emphasise when something happened. 'When' is a very common error in this pattern but is not grammatically correct here.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_041",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe regulator required that all aircraft ______ inspected before the ban was lifted.",
+      "options": [
+        "be individually",
+        "are individually",
+        "were individually",
+        "would be individually"
+      ],
+      "correct": 0,
+      "feedback": "After 'require that', the subjunctive mood uses the base form 'be' — not 'are', 'were' or 'would be'. This is the mandative subjunctive and does not change for tense or person.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_042",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nRarely ______ such a complex sequence of failures in a single incident.",
+      "options": [
+        "has the industry seen",
+        "the industry has seen",
+        "did the industry see",
+        "the industry saw"
+      ],
+      "correct": 0,
+      "feedback": "When 'rarely' starts a sentence, we invert the subject and auxiliary verb: 'Rarely has the industry seen...' We use the present perfect here because no specific past time is mentioned.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_043",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe captain's calm demeanour throughout the emergency was what ______ the passengers from panicking.",
+      "options": [
+        "prevented",
+        "stopped",
+        "kept",
+        "discouraged"
+      ],
+      "correct": 0,
+      "feedback": "All four verbs can follow 'what', but 'prevented' is the most precise and formal in this context. 'Discouraged from' implies persuasion rather than direct prevention, which changes the meaning.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "new_044",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe more experience a controller accumulates, ______ they are at managing high traffic volumes.",
+      "options": [
+        "the more proficient",
+        "the most proficient",
+        "more proficient",
+        "most proficient"
+      ],
+      "correct": 0,
+      "feedback": "The structure 'the more..., the more...' uses comparative forms with 'the' in both clauses. 'The most' is a superlative and cannot be used in this structure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "new_045",
+      "source": "new",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence:\nThe authority's decision to suspend the licence, ______ controversial at the time, has since been widely supported.",
+      "options": [
+        "however",
+        "although",
+        "despite",
+        "even so"
+      ],
+      "correct": 0,
+      "feedback": "'However + adjective' can introduce a reduced concessive clause, meaning 'although it was very controversial'. 'Although' would need a full clause with a subject and verb after it.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q004",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: Firefighters train hard to ______ fires at aerodromes.",
+      "options": [
+        "put out",
+        "put down",
+        "put off"
+      ],
+      "correct": 0,
+      "feedback": "'Put out' means to extinguish. 'Put down' means to kill an animal or write something. 'Put off' means to postpone.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q010",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: It is helpful if pilots can ________ ________ math problems in their head, for example fuel calculations.",
+      "options": [
+        "think out",
+        "work out",
+        "draw out"
+      ],
+      "correct": 1,
+      "feedback": "'Work out' means to calculate or solve. 'Think out' is not a standard collocation for mental calculation. 'Draw out' means to extend or extract.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q021",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: In order to meet the deadline, contractors must ______ up the work on the new tower.",
+      "options": [
+        "build",
+        "hurry",
+        "speed"
+      ],
+      "correct": 2,
+      "feedback": "'Speed up' means to increase the rate of progress. 'Build up' means to accumulate. 'Hurry up' is used for people, not work processes.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q047",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: After a delay it is sometimes possible to ___________, by, for example, increasing the speed of the next flight.",
+      "options": [
+        "recapture lost time",
+        "make up for lost time",
+        "catch up with lost time"
+      ],
+      "correct": 1,
+      "feedback": "'Make up for lost time' is the correct fixed expression. 'Recapture lost time' and 'catch up with lost time' sound plausible but are not standard collocations.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q052",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: The reduction in flights recently has _________ due to the global health situation.",
+      "options": [
+        "come about",
+        "come up",
+        "come around"
+      ],
+      "correct": 0,
+      "feedback": "'Come about' means to happen or occur, usually as a result of something. 'Come up' means to arise unexpectedly. 'Come around' means to change one's opinion or to regain consciousness.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q053",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: His grandfather, father and his son are all pilots. It ______ the family.",
+      "options": [
+        "runs in",
+        "passes through",
+        "comes from"
+      ],
+      "correct": 0,
+      "feedback": "'Run in the family' is the correct idiom for a trait shared across generations. 'Pass through' and 'come from' are not used in this idiomatic sense.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q054",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: The incident last year caused a serious ______ in his career.",
+      "options": [
+        "backstep",
+        "setback",
+        "slowdown"
+      ],
+      "correct": 1,
+      "feedback": "'Setback' means a reversal or check in progress. 'Backstep' is not a standard English word. 'Slowdown' means a reduction in pace, not a damaging event in a career.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q057",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: They work together, but don’t always ______ each other.",
+      "options": [
+        "bring out the best in",
+        "do up the best for",
+        "give out the best to"
+      ],
+      "correct": 0,
+      "feedback": "'Bring out the best in' is the correct collocation meaning to help someone perform at their highest level. The other options use incorrect prepositions and verbs.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q072",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: In certain jobs there is a considerable ______ of risk.",
+      "options": [
+        "degree",
+        "factor",
+        "subject"
+      ],
+      "correct": 0,
+      "feedback": "'A degree of risk' is the correct collocation. 'A factor of risk' and 'a subject of risk' are not standard expressions.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q075",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Which word is a likely problem to happen to air filters",
+      "options": [
+        "Jammed",
+        "Worn",
+        "Clogged"
+      ],
+      "correct": 2,
+      "feedback": "'Clogged' is the correct word for a filter that is blocked. 'Jammed' is used for mechanisms. 'Worn' describes surface deterioration, not blockage.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q078",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: New security procedures are being ___________ out at many airports.",
+      "options": [
+        "turned",
+        "rolled",
+        "launched"
+      ],
+      "correct": 1,
+      "feedback": "'Roll out' means to introduce or implement on a wide scale. 'Turn out' means to produce or result in. 'Launch' is plausible but 'rolled out' is the standard expression for phased implementation.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q079",
+      "source": "original",
+      "band": 5,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: Sometimes it is difficult to _______ ________ all the words in a message, if the speaker talks quickly and there is interference.",
+      "options": [
+        "catch up",
+        "make out",
+        "sort through"
+      ],
+      "correct": 1,
+      "feedback": "'Make out' means to hear or understand with difficulty. 'Catch up' means to reach the same level. 'Sort through' means to organise or search through a collection.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q082",
+      "source": "original",
+      "band": 4,
+      "construct": "vocabulary",
+      "modality": "reading",
+      "stem": "Select the most appropriate response: It’s necessary to ______ more air traffic controllers due to increasing demand.",
+      "options": [
+        "bring up",
+        "take on",
+        "put on"
+      ],
+      "correct": 1,
+      "feedback": "'Take on' means to employ or hire. 'Bring up' means to raise a child or introduce a topic. 'Put on' means to wear or stage an event.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q003",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: These models of aircraft _______ weather radar.",
+      "options": [
+        "don’t have",
+        "doesn’t have",
+        "not have",
+        "not has"
+      ],
+      "correct": 0,
+      "feedback": "'These models' is plural so we need 'don't have'. 'Doesn't have' is singular. 'Not have' and 'not has' are not grammatical forms in standard English.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q005",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: I’d like to see the photos ______ you took when you were in Mozambique.",
+      "options": [
+        "( -- )",
+        "what",
+        "whose"
+      ],
+      "correct": 0,
+      "feedback": "When 'that' or 'which' refer to an object in a relative clause, they can be omitted (contact clause). 'What' cannot introduce a relative clause after a noun. 'Whose' indicates possession.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q006",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: Inflatable rafts are carried ________ landing on water.",
+      "options": [
+        "in case",
+        "because of",
+        "in the event of",
+        "due to"
+      ],
+      "correct": 2,
+      "feedback": "'In the event of' is followed by a noun or gerund and describes a contingency. 'In case' would require a different sentence structure. 'Because of' and 'due to' give a reason, not a contingency.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q019",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: There are ______ people who would like to travel, so aviation will continue to grow.",
+      "options": [
+        "a lot of",
+        "such numbers of",
+        "too much",
+        "too many"
+      ],
+      "correct": 0,
+      "feedback": "'A lot of' works with countable nouns like 'people'. 'Too much' is for uncountable nouns. 'Too many' changes the meaning — it implies an excessive, unwanted number. 'Such numbers of' is not standard.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q024",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: We ___________ you would like to talk to the Captain?",
+      "options": [
+        "would wonder if",
+        "wonder that",
+        "were wondering whether",
+        "are wondering that"
+      ],
+      "correct": 2,
+      "feedback": "'Were wondering whether' is the correct tentative enquiry form. 'Wonder that' and 'are wondering that' are not grammatical. 'Would wonder if' is awkward and non-standard.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q025",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: ______ flights are the priority for all aviation personnel.",
+      "options": [
+        "The safe",
+        "Safe",
+        "The safety",
+        "Safety"
+      ],
+      "correct": 3,
+      "feedback": "'Safety flights' uses 'safety' as a noun adjunct (modifier). 'Safe flights' uses an adjective — grammatically fine but 'safety' is the standard compound noun in this professional context. 'The safe' and 'the safety' incorrectly add an article.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q029",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: Climate activists say that if aircraft don’t stop ________ the air with Carbon Dioxide, the climate will be damaged.",
+      "options": [
+        "pollute",
+        "polluting",
+        "pollution",
+        "to pollute"
+      ],
+      "correct": 1,
+      "feedback": "After 'stop', we use a gerund (verb + -ing). 'Stop polluting' is correct. 'Stop to pollute' would mean to pause in order to pollute, which is the opposite meaning.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q040",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: We ______ to land despite the heavy crosswinds.",
+      "options": [
+        "could",
+        "directed",
+        "managed",
+        "weren’t able"
+      ],
+      "correct": 2,
+      "feedback": "'Managed to land' means succeeded in landing despite difficulty. 'Could' suggests ability but not necessarily success. 'Weren't able' is negative. 'Directed' is the wrong word entirely.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q045",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: You ______ fly drones near airports.",
+      "options": [
+        "needn’t",
+        "mustn’t",
+        "need to not",
+        "don’t have to"
+      ],
+      "correct": 1,
+      "feedback": "'Mustn't' expresses prohibition — it is forbidden. 'Needn't' and 'don't have to' mean it is not necessary but still permitted. 'Need to not' is non-standard.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q049",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: If you don’t pay attention during training you are ________ experience problems later.",
+      "options": [
+        "bound to",
+        "heading to",
+        "supposed to",
+        "fixing to"
+      ],
+      "correct": 0,
+      "feedback": "'Bound to' means certain to happen. 'Heading to' is not used with an infinitive in this way. 'Supposed to' means expected to. 'Fixing to' is a regional US dialect form.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q058",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: It’s time ______ back to the classroom.",
+      "options": [
+        "we went",
+        "for going",
+        "we’ll go",
+        "we go"
+      ],
+      "correct": 0,
+      "feedback": "'It's time + subject + past tense (subjunctive)' is the correct structure. 'It's time we went' uses the mandative subjunctive. 'We'll go' and 'we go' do not fit this structure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q059",
+      "source": "original",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: _______ flown solo before, Frank was very nervous.",
+      "options": [
+        "Due he hasn’t",
+        "Due to he hadn’t",
+        "Because he didn’t",
+        "Never having"
+      ],
+      "correct": 3,
+      "feedback": "'Never having flown solo' is a perfect participle clause expressing the reason for Frank's nervousness. 'Due to' and 'because' require a full clause or noun phrase to follow them correctly.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q060",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: The vehicle ______ Runway 07L before the pilot saw it, so no avoiding action was taken.",
+      "options": [
+        "has already been across",
+        "had already been across",
+        "has already crossed",
+        "had already crossed"
+      ],
+      "correct": 3,
+      "feedback": "'Had already crossed' is past perfect active — the vehicle completed crossing before the pilot saw it. 'Has crossed' is present perfect (wrong tense). 'Been across' is not the correct active verb form here.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q063",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: ______ airport you land at, you may encounter some problems.",
+      "options": [
+        "Where ever",
+        "What ever",
+        "Whichever",
+        "Wherever"
+      ],
+      "correct": 2,
+      "feedback": "'Whichever' means regardless of which one. 'Wherever' relates to place. 'Whatever' relates to things. 'Wherever' and 'whatever' change the meaning of the sentence.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q068",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: If we __________ earlier, we ____________ the flight. Now we need to book another.",
+      "options": [
+        "hadn’t left / would have missed",
+        "hadn’t left / wouldn’t have missed",
+        "had left / would have missed",
+        "had left / wouldn’t have missed"
+      ],
+      "correct": 3,
+      "feedback": "Third conditional: 'If we had left earlier, we wouldn't have missed the flight.' The condition needs 'had left' (not 'hadn't left') and the result needs 'wouldn't have missed' (not 'would have missed').",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q076",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: We ___________ many aircraft at this airport, but now it’s very busy.",
+      "options": [
+        "didn’t use to see",
+        "didn’t usually saw",
+        "were not used to see",
+        "used to see"
+      ],
+      "correct": 3,
+      "feedback": "'Used to see' expresses a past habit that no longer continues. 'Didn't use to see' is the negative form — but the sentence is positive ('but now it's very busy' shows a contrast). 'Didn't usually saw' is not grammatical.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q080",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: He would be a good co-pilot, ___________ talk so much!",
+      "options": [
+        "if only he didn’t",
+        "if he won’t",
+        "when he doesn’t",
+        "if only he won’t"
+      ],
+      "correct": 0,
+      "feedback": "'If only + subject + past tense' expresses a wish about the present. 'If only he didn't talk so much' is correct. 'Won't' is a future form and cannot be used in this structure.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "A"
+    },
+    {
+      "id": "old_q083",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: The 747 ______ the largest commercial airliner, until the A380 was produced.",
+      "options": [
+        "has been",
+        "used to be",
+        "would have been"
+      ],
+      "correct": 1,
+      "feedback": "'Used to be' describes a past state that is no longer true. 'Has been' is present perfect, implying it may still be the largest. 'Would have been' is a conditional form, not appropriate here.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q085",
+      "source": "original",
+      "band": 6,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: The dinner options were chicken, fish or vegetable moussaka, _________ smelled very nice.",
+      "options": [
+        "of which not any",
+        "none of which",
+        "none of both",
+        "which didn’t"
+      ],
+      "correct": 1,
+      "feedback": "'None of which' introduces a non-defining relative clause referring to all the options. 'Of which not any' is not standard word order. 'None of both' is non-standard — 'both' is used for two items, not three.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q087",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: “I _________ air law at flight school, years ago, but I think I have forgotten a lot of it.”",
+      "options": [
+        "remembered to study",
+        "remember to study",
+        "remembered studying",
+        "remember studying"
+      ],
+      "correct": 3,
+      "feedback": "'Remember + gerund' refers to a memory of a past event. 'Remember + infinitive' means to not forget to do something in the future. Since the studying happened in the past, 'remember studying' is correct.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q092",
+      "source": "original",
+      "band": 4,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answers to complete the sentence: “Can you speak ______ a bit? You keep breaking ______ and I can’t hear very well.“",
+      "options": [
+        "Out / Up",
+        "Up / Down",
+        "Out / Down",
+        "Up / Up"
+      ],
+      "correct": 1,
+      "feedback": "'Speak up' means to speak more loudly. 'Breaking up' means the signal is fragmenting (losing clarity). 'Out' and 'down' do not fit either context.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    },
+    {
+      "id": "old_q093",
+      "source": "original",
+      "band": 5,
+      "construct": "structure",
+      "modality": "reading",
+      "stem": "Choose the most appropriate answer to complete the sentence: The airport was ______ congested we had to hold a long time before landing.",
+      "options": [
+        "extremely",
+        "very",
+        "such a"
+      ],
+      "correct": 0,
+      "feedback": "'So + adjective + that' is the correct result clause structure: 'so congested that'. 'Such a' requires a noun after it: 'such a congested airport'. 'Extremely' and 'very' cannot introduce a result clause with 'we'.",
+      "active": true,
+      "flagged": false,
+      "notes": "",
+      "form": "B"
+    }
+  ]
+}
