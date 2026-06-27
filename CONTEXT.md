@@ -1,69 +1,47 @@
-# Benchmark Test — Project Context v0.2
+# Benchmark Check — Project Context v0.3
 
 ## What we are building
 
-A self-administered, browser-based **reading and listening comprehension screener** for aviation English candidates. It reports an indicative ICAO language proficiency level (Below 4 / 4 / 5 / 6).
+A self-administered, browser-based **reading comprehension screener** for aviation English candidates. It reports an indicative ICAO language proficiency level (Below 4 / 4 / 5 / 6).
 
-This is essentially a standard English proficiency test at B1–C1 band (ICAO 4–6), dressed in aviation-themed stimulus material for face validity. It does **not** assess speaking, writing, pronunciation or fluency — honest scope is reading and listening comprehension only.
+This assesses reading comprehension only at B1–C1 band (ICAO 4–6), using aviation-themed stimulus material for face validity. It does **not** assess speaking, writing, pronunciation or fluency.
 
-**Intended use:** A free sweetener offered to aviation training centres to help them quickly assess whether a candidate needs extensive training or just a final polish before their ICAO test.
+**Intended use:** A free tool offered to aviation training centres to help them quickly assess whether a candidate needs extensive training or just a final polish before their ICAO test.
 
 ---
 
-## Current build phase: Trial version (v0.1)
+## Current build phase: Trial (v0.1)
 
-The immediate goal is a **trial delivery tool** — not the final adaptive test. We need to get the item bank in front of real candidates quickly to collect response data and validate item difficulty before building adaptive logic.
+The trial collects response data on all 80 reading items to validate item difficulty before building adaptive logic.
 
-**The trial version should:**
-- Present all 80 reading items in a fixed, randomised-once-per-session order
-- Collect candidate name, email, and self-reported ICAO level at the start
-- Store every item response (item ID, option selected, correct/incorrect) to Firestore
-- Show a per-item flag button ("?" icon) that lets candidates leave a short comment on any question
-- Store flag comments against item IDs in Firestore
-- Display a results screen at the end with indicative band and per-construct breakdown
-- Look professional enough to share with training centre contacts
+**The trial version:**
+- Randomly assigns each candidate to Form A or Form B (40 items each, balanced by band and construct)
+- Presents the 40 items in a randomised order
+- Collects candidate name, email, and self-reported ICAO level at the start (all optional)
+- Stores every item response (item ID, option selected, correct/incorrect, flag comment) to Firestore
+- Allows candidates to flag any item with a short comment ("What seems wrong with this question?")
+- Displays a results screen at the end with indicative band and per-construct breakdown
 
-**What the trial version does NOT need:**
-- Adaptive logic (comes later, after item difficulty is validated)
-- Audio/listening items (these are in development — reading items only for now)
+**What the trial version does NOT include:**
+- Adaptive logic (post-trial, after item difficulty is validated)
+- Audio/listening items (in development — reading items only)
 - User accounts or authentication
-- An admin UI (Firebase console is fine for now)
 
 ---
 
 ## Assessment design
 
-- **MCQ throughout** — no judgment rating, fully machine-scorable
+- **MCQ throughout** — fully machine-scorable
 - **Two modalities (eventually):** reading and listening, roughly equally weighted. Trial is reading only.
-- **Difficulty controlled by language variables** (vocabulary frequency, clause complexity, inference depth) — not aviation knowledge complexity
+- **Difficulty controlled by language variables** (vocabulary frequency, clause complexity, inference depth)
 - **Plain English focus**, not standard phraseology
-- **Distractors** constructed on linguistic grounds — wrong collocation, wrong aspect, wrong register — so aviation knowledge cannot be used to eliminate them
-
----
-
-## Final test structure (adaptive — post-trial)
-
-| Phase | Items | Pool | Purpose |
-|---|---|---|---|
-| Phase 1 | 10 | Random selection from Band 4 items | Baseline |
-| Phase 2 | 10–15 | Adaptive — based on Phase 1 score | Targets right difficulty band |
-| Phase 3 | 5–8 | Confirmation items from indicated band | Confirms placement |
-
-**Phase 2 routing logic:**
-
-| Phase 1 score | Phase 2 pool |
-|---|---|
-| 0–4 / 10 | Stay in Band 4, flag likely below operational |
-| 5–7 / 10 | Band 4–5 boundary items |
-| 8–10 / 10 | Band 5–6 items |
-
-This adaptive logic is NOT built in the trial version. Build it after item difficulty is validated from trial data.
+- **Distractors** constructed on linguistic grounds — wrong collocation, wrong aspect, wrong register
 
 ---
 
 ## Item bank
 
-**File:** `benchmark_items_v01.json` — place in `src/data/` in the React project.
+**File:** `src/data/benchmark_items_v01.json` — source of truth for seeding Firestore.
 
 **80 reading items total:**
 - Band 4: 29 items (B1 — operational minimum)
@@ -71,7 +49,14 @@ This adaptive logic is NOT built in the trial version. Build it after item diffi
 - Band 6: 17 items (C1 — expert proficiency)
 - Construct split: 37 vocabulary, 43 structure
 
-**Item schema:**
+**Form split (40 items per form, balanced by band and construct):**
+
+| | Band 4 | Band 5 | Band 6 | Total |
+|---|---|---|---|---|
+| Form A | 15 (8 vocab, 7 struct) | 17 (7 vocab, 10 struct) | 8 (4 vocab, 4 struct) | 40 |
+| Form B | 14 (7 vocab, 7 struct) | 17 (7 vocab, 10 struct) | 9 (4 vocab, 5 struct) | 40 |
+
+**Item schema (JSON / Firestore):**
 ```json
 {
   "id": "new_001",
@@ -79,7 +64,8 @@ This adaptive logic is NOT built in the trial version. Build it after item diffi
   "band": 4,
   "construct": "vocabulary",
   "modality": "reading",
-  "stem": "Select the most appropriate word...",
+  "form": "A",
+  "stem": "Select the most appropriate word to complete the sentence…",
   "options": ["option A", "option B", "option C", "option D"],
   "correct": 0,
   "feedback": "Explanation shown after answering",
@@ -90,42 +76,46 @@ This adaptive logic is NOT built in the trial version. Build it after item diffi
 ```
 
 - `correct` is a **0-based index** into the `options` array
-- `active: false` items should be excluded from the item pool
-- `flagged` is set server-side when a candidate submits a flag comment — do not rely on this client-side field
+- `form` is `"A"` or `"B"` — fixed at item level, assigned during item bank creation
+- `active: false` items are excluded from the trial pool
+- `notes` field: use to record revision history (e.g. "Stem reworded 2026-07-01 after 3 flags")
+
+**Editing items:** Edit `benchmark_items_v01.json`, commit (git history is the audit trail), then re-seed via the admin page. The `notes` field surfaces in the Item Analysis tab so revision history is visible alongside flag data.
 
 ---
 
 ## Firestore data model
 
-### Collection: `items`
-Mirrors the JSON schema above. Seed from `benchmark_items_v01.json` on first deploy.
-The `active` flag allows items to be retired without deletion — important for later validity analysis.
+**Project:** `lenguax-benchmark-32392`
 
-### Collection: `results`
-One document per test submission:
+### Collection: `benchmark_items`
+Mirrors the JSON schema above. Seeded from `benchmark_items_v01.json` via the admin page ("↑ Seed from JSON" button). Re-seed after any item edits.
+
+### Collection: `benchmark_results`
+One document per completed test:
 ```
 /{resultId}
   timestamp: serverTimestamp()
+  mode: "trial"
+  form: "A" | "B"
   candidateName: string
   candidateEmail: string
-  selfReportedLevel: "4" | "5" | "6" | "unsure" | "none"
+  selfReportedLevel: "4" | "5" | "6" | "unsure" | "none" | ""
   responses: [
-    { itemId: string, selected: number, correct: boolean, flagComment: string | null }
+    { itemId, band, construct, selected, correct, flagComment }
   ]
   scores: {
-    band4: { correct: number, total: number },
-    band5: { correct: number, total: number },
-    band6: { correct: number, total: number },
-    vocabulary: { correct: number, total: number },
-    structure: { correct: number, total: number }
+    band4: { correct, total },
+    band5: { correct, total },
+    band6: { correct, total },
+    vocabulary: { correct, total },
+    structure: { correct, total },
+    totalCorrect, totalItems, indicativeLevel
   }
-  indicativeLevel: "below4" | "4" | "5" | "6"
-  totalCorrect: number
-  totalItems: number
 ```
 
-### Collection: `flags`
-One document per flag submission (in addition to storing flagComment in the result):
+### Collection: `benchmark_flags`
+One document per flag submission (also stored inline in `responses`):
 ```
 /{flagId}
   timestamp: serverTimestamp()
@@ -133,13 +123,10 @@ One document per flag submission (in addition to storing flagComment in the resu
   comment: string
   candidateEmail: string | null
 ```
-Keeping flags in their own collection makes it easy to query "all flags for item X" without scanning results.
 
 ---
 
 ## Indicative level scoring (trial version)
-
-Simple banded scoring — refine after trial data collected:
 
 | Score | Indicative level |
 |---|---|
@@ -148,27 +135,23 @@ Simple banded scoring — refine after trial data collected:
 | 60–79% overall | Level 5 |
 | 80%+ overall | Level 6 |
 
-Also compute and store per-band scores separately — these will be the basis for the validity analysis.
+Per-band and per-construct scores are stored separately for post-trial validity analysis.
 
 ---
 
 ## Trialling plan
 
-The trial version is shared with:
+The trial is shared with:
 1. Candidates who have already done a Lenguax speaking test (known ICAO level — most valuable for validation)
 2. Training centre contacts who send it to their students
 3. Target spread: Level 4, 5 and 6 candidates
 
-**Minimum useful sample:** 15–20 to spot broken items. 40–50 to start seeing difficulty patterns.
+**Minimum useful sample:** 15–20 per form to spot broken items. 40–50 per form to start seeing difficulty patterns.
 
-**Validation analysis (post-trial):**
-For each item: proportion correct overall, and proportion correct split by self-reported ICAO level.
-- Items where Level 4 and Level 6 candidates score identically → doing no discriminative work → review
+**Validity analysis (post-trial):**
+For each item: proportion correct overall, and split by self-reported ICAO level.
+- Items where Level 4 and Level 6 candidates score identically → no discriminative work → review
 - Items where Level 6 candidates score lower than Level 4 → probably ambiguous → check flag comments
-
-**The flag mechanism:**
-A small "?" icon on each question opens a one-line input: "What's wrong with this question?"
-This is stored against the item ID. After 20–30 responses, repeatedly flagged items are obvious candidates for revision.
 
 ---
 
@@ -177,13 +160,12 @@ This is stored against the item ID. After 20–30 responses, repeatedly flagged 
 | Layer | Technology |
 |---|---|
 | Frontend | React (Vite) |
-| Database | Firebase Firestore (item bank + results + flags) |
-| Audio storage | Firebase Storage (listening items — phase 2) |
-| Hosting | lenguax.com/benchmark/ (SiteGround) |
+| Database | Firebase Firestore (`lenguax-benchmark-32392`) |
+| Hosting | lenguax.com/benchmark/ (SiteGround / Apache) |
 | Deployment | GitHub Actions → FTP to SiteGround |
-| Dev environment | VS Code / Cursor on Linux Mint |
+| Admin view | RaterSystem → Benchmark page (reads from same Firestore project) |
 
-**No backend server.** Firebase handles all data and storage. The React app builds to static files deployed via FTP.
+**No backend server.** Firebase handles all data. The React app builds to static files deployed via FTP.
 
 ---
 
@@ -192,103 +174,112 @@ This is stored against the item ID. After 20–30 responses, repeatedly flagged 
 ```
 src/
   components/
-    QuestionCard.jsx       — renders stem, options, flag button
-    FlagModal.jsx          — comment input triggered by flag button
-    ProgressBar.jsx        — shows progress through test
-    ResultsScreen.jsx      — end screen with score breakdown
+    TrialPlayer.jsx        — flat 40-item player, form assignment, flag handling
+    QuestionCard.jsx       — renders stem, options, flag button + inline form
+    TrialResultsScreen.jsx — end screen with overall + band + construct breakdown
+    TestPlayer.jsx         — adaptive 3-phase player (not used in trial)
+    ResultsScreen.jsx      — adaptive results (not used in trial)
+    AudioPlayer.jsx        — audio player stub (phase 2)
   pages/
-    Home.jsx               — intro, candidate name/email/level form
-    Test.jsx               — main test player, manages item sequence and responses
-    Results.jsx            — post-submission results display
+    Home.jsx               — intro, candidate registration form, routes to /trial
+    Trial.jsx              — fetches items from Firestore, renders TrialPlayer
+    TrialResults.jsx       — renders TrialResultsScreen
+    Admin.jsx              — password-gated admin: results, item analysis, item bank
+    Test.jsx               — adaptive test page (not used in trial)
+    Results.jsx            — adaptive results page (not used in trial)
   firebase/
-    config.js              — Firebase initialisation
-    items.js               — fetchItems() from Firestore
-    results.js             — submitResult(), submitFlag()
+    config.js              — Firebase initialisation (lenguax-benchmark-32392)
+    items.js               — fetchItems(), fetchAllItems(), updateItem(), seedItemsFromJson()
+    results.js             — saveTrialResult(), saveFlag(), fetchTrialResults(), fetchFlags()
   data/
-    benchmark_items_v01.json   — item bank (seed source)
-  utils/
-    scoring.js             — score calculation and band assignment
-    shuffle.js             — Fisher-Yates shuffle for item randomisation
-  App.jsx
+    benchmark_items_v01.json   — item bank source of truth (used for seeding)
+  App.jsx                  — routes: / /trial /trial-results /admin /test /results
   main.jsx
 ```
+
+---
+
+## Admin pages
+
+### Benchmark admin (`lenguax.com/benchmark/admin`)
+Password-gated (VITE_ADMIN_PASSWORD). Three tabs:
+- **Results** — all trial submissions: candidate, form, self-reported level, score, indicative level, flag count, date
+- **Item analysis** — per-item stats: attempts, % correct (red <30%, green >85%), flag count, flag comments. Filterable by form, sortable by ID / difficulty / flags
+- **Item bank** — list and edit items in Firestore; "↑ Seed from JSON" button to initialise or re-seed
+
+### RaterSystem → Benchmark page
+Same Firestore project, read via a named secondary Firebase app (`benchmarkDb`). Two tabs:
+- **Results** — same data as benchmark admin, plus ability to link a result to a person record in RaterSystem for validity correlation
+- **Item analysis** — same per-item stats
+- **Item bank** — Firestore item list (uses adaptive schema; not relevant for trial)
 
 ---
 
 ## Deployment pipeline
 
 - Repo: `github.com/paullenguax/benchmark`
-- Local: `/home/paul/Programs/benchmark/`
+- Local: `/home/paul/Programs/Benchmark Check/`
 - GitHub Action: `.github/workflows/deploy.yml`
 - Deploys to: `lenguax.com/public_html/benchmark/`
 - Trigger: push to `main` branch
-- FTP credentials stored as GitHub repo secrets: `FTP_HOST`, `FTP_USERNAME`, `FTP_PASSWORD`
-- Vite base path set to `/benchmark/` in `vite.config.js`
+- Vite base path: `/benchmark/` in `vite.config.js`
+- Apache SPA routing: `public/.htaccess` rewrites all paths to `index.html`
 
-Pipeline is fully working — a push to main builds and deploys automatically.
-
----
-
-## Firebase setup (still to do)
-
-Firebase project not yet created. Steps needed:
-1. Create project at console.firebase.google.com
-2. Enable Firestore (start in test mode for trial)
-3. Enable Storage (for audio — phase 2)
-4. Get web app config (apiKey, authDomain, projectId etc.)
-5. Add config values as Vite env vars (VITE_FIREBASE_*) in `.env.local`
-6. Add same env vars as GitHub Actions secrets for the build step
-7. Seed Firestore with `benchmark_items_v01.json`
-
-Firebase config goes in `src/firebase/config.js`:
-```js
-import { initializeApp } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
-
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-}
-
-const app = initializeApp(firebaseConfig)
-export const db = getFirestore(app)
+**GitHub Actions secrets required:**
+```
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_APP_ID
+VITE_ADMIN_PASSWORD
+FTP_HOST  FTP_USERNAME  FTP_PASSWORD
 ```
 
 ---
 
-## Current status
+## Firestore security rules
 
-- [x] Local git repo initialised at `/home/paul/Programs/benchmark/`
-- [x] Linked to GitHub at `github.com/paullenguax/benchmark`
-- [x] Vite + React scaffold created
-- [x] Firebase SDK installed (`npm install firebase`)
-- [x] GitHub Actions workflow created and working
-- [x] Deploying successfully to `lenguax.com/benchmark/`
-- [x] Item bank created: `benchmark_items_v01.json` (80 items)
-- [ ] Firebase project not yet created
-- [ ] Firestore not yet seeded
-- [ ] React app not yet scaffolded beyond default Vite template
-- [ ] No test logic built yet
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /benchmark_items/{id} {
+      allow read: if true;
+      allow write: if true;   // trial period — no auth yet
+    }
+    match /benchmark_results/{id} {
+      allow write: if true;
+      allow read: if false;
+    }
+    match /benchmark_flags/{id} {
+      allow write: if true;
+      allow read: if false;
+    }
+  }
+}
+```
 
 ---
 
-## Immediate next task
+## Final test structure (adaptive — post-trial)
 
-Build the trial version of the test app:
+Build after item difficulty is validated from trial data.
 
-1. Set up Firebase project and add config to `.env.local`
-2. Scaffold the React component structure above
-3. Build `Home.jsx` — candidate registration form (name, email, self-reported level)
-4. Build `Test.jsx` — fetch items from JSON, shuffle, present one at a time, collect responses, handle flag comments
-5. Build `ResultsScreen.jsx` — score by band and construct, indicative level, thank-you message
-6. Wire up Firestore writes on submission
-7. Push and verify deployment
+| Phase | Items | Pool | Purpose |
+|---|---|---|---|
+| Phase 1 | 10 | Random from Band 4 | Baseline |
+| Phase 2 | 10–15 | Adaptive — based on Phase 1 score | Targets right difficulty band |
+| Phase 3 | 5–8 | Confirmation items from indicated band | Confirms placement |
 
-**For the trial version, load items from the local JSON file (`src/data/benchmark_items_v01.json`) rather than Firestore** — simpler to build, avoids Firestore read costs during trialling, and the item bank will not change during the trial period. Firestore is only needed for writing results and flags.
+**Phase 2 routing:**
+
+| Phase 1 score | Phase 2 pool |
+|---|---|
+| 0–4 / 10 | Stay in Band 4, flag likely below operational |
+| 5–7 / 10 | Band 4–5 boundary items |
+| 8–10 / 10 | Band 5–6 items |
 
 ---
 
@@ -300,4 +291,22 @@ Audio items will follow the trial. Planned types:
 - Paraphrase recognition (spoken phrase to written options)
 - Non-standard / plain English comprehension (unusual situations)
 
-Audio will be studio-recorded (two speakers, one native, one non-native) and served from Firebase Storage. Listening items will use the same schema with `modality: "listening"` and an `audioRef` field pointing to the Storage path.
+Audio will be served from Firebase Storage. Listening items use the same schema with `modality: "listening"` and an `audioRef` field.
+
+---
+
+## Current status
+
+- [x] React + Vite scaffold
+- [x] Firebase SDK installed, pointing at `lenguax-benchmark-32392`
+- [x] GitHub Actions deploy pipeline (push to main → live)
+- [x] Apache `.htaccess` for SPA routing
+- [x] Item bank: 80 items in `benchmark_items_v01.json` with form A/B assignments
+- [x] Trial player: flat 40-item flow with form assignment, shuffle, flag mechanism
+- [x] Results screen: overall score, per-band and per-construct breakdown, form badge
+- [x] Firestore writes: results and flags
+- [x] Admin page: results, item analysis, item bank with seed button
+- [x] RaterSystem integration: Benchmark page reads from `lenguax-benchmark-32392`
+- [ ] Firestore seeded with items (do via admin → Item bank → Seed from JSON)
+- [ ] Adaptive test logic (post-trial)
+- [ ] Listening items (post-trial)

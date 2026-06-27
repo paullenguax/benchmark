@@ -29,12 +29,12 @@ export default function Home() {
       <main id="main-content">
         <section className="home-intro" aria-label="About this test">
           <p>
-            This free screener gives an indicative ICAO language proficiency level (4, 5, or 6)
-            based on reading comprehension. It takes approximately 10–15 minutes.
+            This free screener aims to give an indicative ICAO language proficiency level (4–6)
+            based on multiple choice questions. It takes approximately 10–15 minutes.
           </p>
           <p>
-            You will see 40 reading items presented in random order. Work through them at your
-            own pace — there is no time limit.
+            In this trial version you will see 40 items presented in random order. Work through
+            them at your own pace, there is no time limit.
           </p>
           <p className="disclaimer-small">
             This is not a formal ICAO assessment. It does not test speaking, writing,
