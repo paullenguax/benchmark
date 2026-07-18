@@ -21,7 +21,7 @@ export default function TrialResultsScreen({ result, candidateName }) {
   const { scores, responses, form } = result
   const {
     band4, band5, band6,
-    vocabulary, structure,
+    vocabulary, structure, comprehension,
     totalCorrect, totalItems,
     indicativeLevel,
   } = scores
@@ -105,6 +105,13 @@ export default function TrialResultsScreen({ result, candidateName }) {
               <td>{structure.correct} / {structure.total}</td>
               <td>{pct(structure.correct, structure.total)}</td>
             </tr>
+            {comprehension && comprehension.total > 0 && (
+              <tr>
+                <td>Comprehension</td>
+                <td>{comprehension.correct} / {comprehension.total}</td>
+                <td>{pct(comprehension.correct, comprehension.total)}</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

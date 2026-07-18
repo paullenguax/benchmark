@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /benchmark_items/{id} {
+      allow read: if true;
+      allow write: if true;   // trial period — no auth yet
+    }
+    match /benchmark_results/{id} {
+      allow create: if true;             // candidates submit anonymously
+      allow read, update, delete: if request.auth != null;   // admin only, via mintBenchmarkAdminToken
+    }
+    match /benchmark_flags/{id} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

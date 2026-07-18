@@ -1,4 +1,4 @@
-# Benchmark Check — Project Context v0.3
+# Benchmark Check — Project Context v0.4
 
 ## What we are building
 
@@ -24,8 +24,9 @@ The trial collects response data on all 80 reading items to validate item diffic
 
 **What the trial version does NOT include:**
 - Adaptive logic (post-trial, after item difficulty is validated)
-- Audio/listening items (in development — reading items only)
-- User accounts or authentication
+- Candidate accounts or authentication (admin now authenticates — see Firestore security rules)
+
+Comprehension items and listening/audio items are supported end-to-end as of 2026-07-18 but have no authored content yet (0 comprehension items, 0 audio items in the live 80-item bank).
 
 ---
 
@@ -66,21 +67,27 @@ The trial collects response data on all 80 reading items to validate item diffic
   "modality": "reading",
   "form": "A",
   "stem": "Select the most appropriate word to complete the sentence…",
+  "stimulus": null,
+  "audioRef": null,
   "options": ["option A", "option B", "option C", "option D"],
   "correct": 0,
   "feedback": "Explanation shown after answering",
   "active": true,
   "flagged": false,
-  "notes": ""
+  "notes": "",
+  "correctedAt": null
 }
 ```
 
 - `correct` is a **0-based index** into the `options` array
 - `form` is `"A"` or `"B"` — fixed at item level, assigned during item bank creation
-- `active: false` items are excluded from the trial pool
+- `construct` is `vocabulary`, `structure`, or **`comprehension`** (added 2026-07-18) — comprehension items use `stimulus` for a short passage/NOTAM/exchange plus one question about it
+- `audioRef` (listening items) holds a full Firebase Storage download URL, uploaded via RaterSystemNew's item editor
+- `active: false` items are excluded from the trial pool — flip an item inactive while investigating a flag, flip back on once fixed
 - `notes` field: use to record revision history (e.g. "Stem reworded 2026-07-01 after 3 flags")
+- `correctedAt`: set by "Mark corrected" in RaterSystemNew's Item Analysis tab; used to compute a "responses since correction" stat separate from all-time stats
 
-**Editing items:** Edit `benchmark_items_v01.json`, commit (git history is the audit trail), then re-seed via the admin page. The `notes` field surfaces in the Item Analysis tab so revision history is visible alongside flag data.
+**Editing items:** items are edited directly in Firestore via RaterSystemNew's `/benchmark` item editor (admin only) — this is now the source of truth. `benchmark_items_v01.json` is a historical snapshot of the initial 80-item seed and is **no longer re-seeded or treated as authoritative**; don't hand-edit it expecting it to reach Firestore.
 
 ---
 
@@ -179,7 +186,7 @@ src/
     TrialResultsScreen.jsx — end screen with overall + band + construct breakdown
     TestPlayer.jsx         — adaptive 3-phase player (not used in trial)
     ResultsScreen.jsx      — adaptive results (not used in trial)
-    AudioPlayer.jsx        — audio player stub (phase 2)
+    AudioPlayer.jsx        — plays audioRef (a Storage download URL) via a plain <audio> element
   pages/
     Home.jsx               — intro, candidate registration form, routes to /trial
     Trial.jsx              — fetches items from Firestore, renders TrialPlayer
@@ -201,17 +208,14 @@ src/
 
 ## Admin pages
 
-### Benchmark admin (`lenguax.com/benchmark/admin`)
-Password-gated (VITE_ADMIN_PASSWORD). Three tabs:
-- **Results** — all trial submissions: candidate, form, self-reported level, score, indicative level, flag count, date
-- **Item analysis** — per-item stats: attempts, % correct (red <30%, green >85%), flag count, flag comments. Filterable by form, sortable by ID / difficulty / flags
-- **Item bank** — list and edit items in Firestore; "↑ Seed from JSON" button to initialise or re-seed
+### RaterSystem → Benchmark page (`lenguax.com/ratersystem/benchmark`) — the supported admin surface
+Same Firestore project, connected via a named secondary Firebase app (`benchmarkDb`/`benchmarkAuth`/`benchmarkStorage`), authenticated via `mintBenchmarkAdminToken` (see rules section above). Three tabs:
+- **Results** — all trial submissions: candidate, form, self-reported level, score, indicative level, flag count, date; link a result to a person record in RaterSystem for validity correlation
+- **Item analysis** — per-item stats: attempts, % correct (red <30%, green >85%), flag count + comments, "Mark corrected" action (sets `correctedAt`), and a "since correction" stat computed only from responses after that timestamp. Filterable by form, sortable by ID / difficulty / flags
+- **Item bank** — full CRUD editor matching the real item schema exactly (`stem`/`form`/index-based `correct`/`stimulus`/`audioRef` with upload/`notes`), a construct×form coverage summary, active/inactive toggle
 
-### RaterSystem → Benchmark page
-Same Firestore project, read via a named secondary Firebase app (`benchmarkDb`). Two tabs:
-- **Results** — same data as benchmark admin, plus ability to link a result to a person record in RaterSystem for validity correlation
-- **Item analysis** — same per-item stats
-- **Item bank** — Firestore item list (uses adaptive schema; not relevant for trial)
+### Benchmark admin (`lenguax.com/benchmark/admin`) — legacy, scheduled for removal
+Password-gated (VITE_ADMIN_PASSWORD) standalone admin in this repo. Duplicates the RaterSystemNew tabs above but reads/writes unauthenticated (works only while `benchmark_results`/`benchmark_flags` reads stay open — it will break once those rules require `request.auth != null`, since this page has no auth bridge). Keep it read-only at most until RaterSystemNew's admin is verified working in production, then delete `Admin.jsx` and its route.
 
 ---
 
@@ -241,6 +245,8 @@ FTP_HOST  FTP_USERNAME  FTP_PASSWORD
 
 ## Firestore security rules
 
+Source of truth: `firestore.rules` / `storage.rules` in this repo (`firebase.json` points at project `lenguax-benchmark-32392`). Deploy with `firebase deploy --only firestore:rules,storage:rules`.
+
 ```
 rules_version = '2';
 service cloud.firestore {
@@ -250,16 +256,18 @@ service cloud.firestore {
       allow write: if true;   // trial period — no auth yet
     }
     match /benchmark_results/{id} {
-      allow write: if true;
-      allow read: if false;
+      allow create: if true;                        // candidates submit anonymously
+      allow read, update, delete: if request.auth != null;   // admin only
     }
     match /benchmark_flags/{id} {
-      allow write: if true;
-      allow read: if false;
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
     }
   }
 }
 ```
+
+`benchmark_results`/`benchmark_flags` hold candidate PII (name/email), so admin reads require Firebase Auth in this project. RaterSystemNew bridges its own admin's identity in via the `mintBenchmarkAdminToken` Cloud Function (defined in `RaterSystemNew/functions/index.js`), which mints a custom token for this project after checking `people/{uid}.role === 'admin'` in `ratersystem`. `BenchmarkPage.tsx` signs into a secondary `benchmarkAuth` connection with that token before querying.
 
 ---
 
@@ -283,15 +291,13 @@ Build after item difficulty is validated from trial data.
 
 ---
 
-## Listening items — phase 2 (not yet built)
+## Listening items
 
-Audio items will follow the trial. Planned types:
+Audio upload (RaterSystemNew item editor → Storage) and playback (`AudioPlayer.jsx`) are wired up as of 2026-07-18 — `modality: "listening"` items work the same as reading items with an `audioRef` (full Storage download URL). Planned listening item types, not yet authored:
 - Mishearing / phonological confusion (numbers, callsigns)
 - Implicit meaning / inference (short exchanges)
 - Paraphrase recognition (spoken phrase to written options)
 - Non-standard / plain English comprehension (unusual situations)
-
-Audio will be served from Firebase Storage. Listening items use the same schema with `modality: "listening"` and an `audioRef` field.
 
 ---
 
@@ -301,12 +307,14 @@ Audio will be served from Firebase Storage. Listening items use the same schema 
 - [x] Firebase SDK installed, pointing at `lenguax-benchmark-32392`
 - [x] GitHub Actions deploy pipeline (push to main → live)
 - [x] Apache `.htaccess` for SPA routing
-- [x] Item bank: 80 items in `benchmark_items_v01.json` with form A/B assignments
+- [x] Item bank: 80 items seeded live in Firestore (37 vocabulary / 43 structure, 40/40 Form A/B) — confirmed via direct query 2026-07-18
 - [x] Trial player: flat 40-item flow with form assignment, shuffle, flag mechanism
-- [x] Results screen: overall score, per-band and per-construct breakdown, form badge
+- [x] Results screen: overall score, per-band and per-construct breakdown (now including comprehension), form badge
 - [x] Firestore writes: results and flags
-- [x] Admin page: results, item analysis, item bank with seed button
-- [x] RaterSystem integration: Benchmark page reads from `lenguax-benchmark-32392`
-- [ ] Firestore seeded with items (do via admin → Item bank → Seed from JSON)
+- [x] RaterSystem `/benchmark` admin: schema-correct item editor (matches live data exactly), results, item analysis with flag/correction tracking — the supported admin surface
+- [x] Admin auth bridge: `mintBenchmarkAdminToken` Cloud Function + `request.auth != null` rules on results/flags
+- [x] Comprehension construct: schema, scoring, and UI support added 2026-07-18 — **no comprehension items authored yet** (0 of 80 items), needs content
+- [x] Listening items: audio upload (RaterSystemNew) + playback (`AudioPlayer.jsx`) wired up 2026-07-18 — no audio items authored yet
+- [x] Flag → correct tracking: `active` toggle for immediate exposure control, `correctedAt` + "Mark corrected" + since-correction stat for tracking fresh data after a fix
+- [ ] Standalone `/admin` page in this repo: legacy, pending removal once RaterSystemNew admin verified working in production (needs a benchmark-project service-account key set as a Cloud Functions secret + rules deploy first)
 - [ ] Adaptive test logic (post-trial)
-- [ ] Listening items (post-trial)

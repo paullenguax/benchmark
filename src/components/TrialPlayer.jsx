@@ -31,6 +31,7 @@ function computeScores(responses, itemMap) {
   const construct = {
     vocabulary: { correct: 0, total: 0 },
     structure:  { correct: 0, total: 0 },
+    comprehension: { correct: 0, total: 0 },
   }
   let totalCorrect = 0
 
@@ -59,6 +60,7 @@ function computeScores(responses, itemMap) {
     band6: band[6],
     vocabulary: construct.vocabulary,
     structure:  construct.structure,
+    comprehension: construct.comprehension,
     totalCorrect,
     totalItems,
     indicativeLevel,
