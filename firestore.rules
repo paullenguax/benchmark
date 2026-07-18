@@ -5,13 +5,27 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;   // trial period — no auth yet
     }
+
+    // A centre account is one Firestore doc per Firebase Auth user (doc ID =
+    // uid), created manually by an admin: { centreId, centreName }. Lets a
+    // centre log in and see only its own trainees' results.
+    match /centre_accounts/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || request.auth.token.admin == true);
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+
     match /benchmark_results/{id} {
       allow create: if true;             // candidates submit anonymously
-      allow read, update, delete: if request.auth != null;   // admin only, via mintBenchmarkAdminToken
+      allow read: if request.auth != null && (
+        request.auth.token.admin == true ||
+        (exists(/databases/$(database)/documents/centre_accounts/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/centre_accounts/$(request.auth.uid)).data.centreId == resource.data.centreId)
+      );
+      allow update, delete: if request.auth != null && request.auth.token.admin == true;   // admin only
     }
     match /benchmark_flags/{id} {
       allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if request.auth != null && request.auth.token.admin == true;   // admin only
     }
   }
 }

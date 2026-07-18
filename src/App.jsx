@@ -4,6 +4,7 @@ import Test from './pages/Test'
 import Results from './pages/Results'
 import Trial from './pages/Trial'
 import TrialResults from './pages/TrialResults'
+import Centre from './pages/Centre'
 import './App.css'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/trial-results" element={<TrialResults />} />
         <Route path="/test" element={<Test />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/centre" element={<Centre />} />
       </Routes>
     </BrowserRouter>
   )

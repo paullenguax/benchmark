@@ -1,11 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [selfReportedLevel, setSelfReportedLevel] = useState('')
+
+  // A centre's link looks like /benchmark/?centre=oxford-aviation — tags
+  // every result from that link so the centre can see only its own trainees.
+  const centreId = searchParams.get('centre') || null
 
   function handleStart() {
     navigate('/trial', {
@@ -13,6 +18,7 @@ export default function Home() {
         candidateName:     name.trim(),
         candidateEmail:    email.trim(),
         selfReportedLevel: selfReportedLevel || 'none',
+        centreId,
       },
     })
   }

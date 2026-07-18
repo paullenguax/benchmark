@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
@@ -14,3 +15,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
+
+// getAuth() validates the API key synchronously and throws on a bad config —
+// isolate it so a config problem only breaks the /centre login, not the
+// whole app (same crash class fixed in RaterSystemNew's lib/firebase.ts).
+export let auth
+try {
+  auth = getAuth(app)
+} catch (err) {
+  console.error('Firebase Auth failed to initialize — check VITE_FIREBASE_* env vars:', err)
+}

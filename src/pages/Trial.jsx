@@ -10,6 +10,7 @@ export default function Trial() {
   const candidateName     = state?.candidateName     ?? ''
   const candidateEmail    = state?.candidateEmail    ?? ''
   const selfReportedLevel = state?.selfReportedLevel ?? ''
+  const centreId          = state?.centreId          ?? null
 
   const [items, setItems] = useState(null)
   const [error, setError] = useState(null)
@@ -27,6 +28,7 @@ export default function Trial() {
       candidateName,
       candidateEmail,
       selfReportedLevel,
+      centreId,
     }
     try {
       await saveTrialResult(fullResult)
