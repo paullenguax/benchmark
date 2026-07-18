@@ -96,7 +96,7 @@ Comprehension items and listening/audio items are supported end-to-end as of 202
 **Project:** `lenguax-benchmark-32392`
 
 ### Collection: `benchmark_items`
-Mirrors the JSON schema above. Seeded from `benchmark_items_v01.json` via the admin page ("↑ Seed from JSON" button). Re-seed after any item edits.
+Mirrors the JSON schema above. Originally seeded from `benchmark_items_v01.json`; edited directly in Firestore via RaterSystemNew's `/benchmark` admin now (see "Editing items" above) — no seed button exists in either app anymore.
 
 ### Collection: `benchmark_results`
 One document per completed test:
@@ -108,6 +108,7 @@ One document per completed test:
   candidateName: string
   candidateEmail: string
   selfReportedLevel: "4" | "5" | "6" | "unsure" | "none" | ""
+  centreId: string | null        // from ?centre=<id> on the candidate link
   responses: [
     { itemId, band, construct, selected, correct, flagComment }
   ]
@@ -117,6 +118,7 @@ One document per completed test:
     band6: { correct, total },
     vocabulary: { correct, total },
     structure: { correct, total },
+    comprehension: { correct, total },
     totalCorrect, totalItems, indicativeLevel
   }
 ```
@@ -129,6 +131,14 @@ One document per flag submission (also stored inline in `responses`):
   itemId: string
   comment: string
   candidateEmail: string | null
+```
+
+### Collection: `centre_accounts`
+One doc per centre, **document ID = the centre's Firebase Auth UID** (created manually — see "Centre portal" above):
+```
+/{uid}
+  centreId: string     // must match the ?centre= value on that centre's link
+  centreName: string   // display label in the centre portal heading
 ```
 
 ---
@@ -217,6 +227,20 @@ Same Firestore project, connected via a named secondary Firebase app (`benchmark
 ### Benchmark admin (`lenguax.com/benchmark/admin`) — removed 2026-07-18
 Used to be a password-gated standalone admin in this repo, duplicating the RaterSystemNew tabs above but reading/writing unauthenticated. Deleted (`Admin.jsx` + its route + the admin-only Firestore helpers in `firebase/items.js`/`firebase/results.js`) once RaterSystemNew's admin was confirmed working in production — it would have been broken anyway once `benchmark_results`/`benchmark_flags` reads started requiring `request.auth != null`. `VITE_ADMIN_PASSWORD` is no longer read anywhere in this app; the GitHub Actions secret can be removed whenever convenient.
 
+### Centre portal (`lenguax.com/benchmark/centre`) — added 2026-07-18
+Lets a training centre log in and see only its own trainees' results — the feature the old GRaterSystem had, reintroduced here. Not an admin surface (no item editing, no flags, no other centres' data).
+
+**How submissions get tagged:** give each centre a link with a query param, e.g. `lenguax.com/benchmark/?centre=oxford-aviation`. `Home.jsx` reads `?centre=` once (`useSearchParams`) and carries it through `Trial.jsx` into the saved `benchmark_results` doc as `centreId`. No param = `centreId: null` (untagged/direct candidates, visible only to Lenguax admins).
+
+**How a centre account is provisioned (manual, no UI — same pattern as adding a rater in RaterSystemNew):**
+1. Firebase Console → `lenguax-benchmark-32392` → Authentication → Add user (email + password) → copy the UID.
+2. Firestore → create a doc in `centre_accounts` with that UID as the **document ID**; fields: `centreId` (must exactly match the `?centre=` value you gave them) and `centreName` (display label, shown as the portal heading).
+3. Give the centre their login email/password and their tagged link (`?centre=<their centreId>`). One shared login per centre, not per staff member.
+
+**Enforcement is server-side, not just UI filtering** — `firestore.rules`: a result is readable if `request.auth.token.admin == true` (admins, via `mintBenchmarkAdminToken`'s custom claim) **or** the caller's `centre_accounts/{uid}.centreId` matches the result's `centreId`. A centre login literally cannot fetch another centre's (or an untagged candidate's) data, even by tampering with the client. `centre_accounts/{uid}` itself is readable only by that uid or an admin, writable only by an admin.
+
+`benchmark_flags` stayed admin-only (`request.auth.token.admin == true`) — centres see result scores, not item-quality flag comments.
+
 ---
 
 ## Deployment pipeline
@@ -255,17 +279,28 @@ service cloud.firestore {
       allow read: if true;
       allow write: if true;   // trial period — no auth yet
     }
+    match /centre_accounts/{uid} {
+      allow read: if request.auth != null && (request.auth.uid == uid || request.auth.token.admin == true);
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
     match /benchmark_results/{id} {
-      allow create: if true;                        // candidates submit anonymously
-      allow read, update, delete: if request.auth != null;   // admin only
+      allow create: if true;             // candidates submit anonymously
+      allow read: if request.auth != null && (
+        request.auth.token.admin == true ||
+        (exists(/databases/$(database)/documents/centre_accounts/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/centre_accounts/$(request.auth.uid)).data.centreId == resource.data.centreId)
+      );
+      allow update, delete: if request.auth != null && request.auth.token.admin == true;
     }
     match /benchmark_flags/{id} {
       allow create: if true;
-      allow read, update, delete: if request.auth != null;
+      allow read, update, delete: if request.auth != null && request.auth.token.admin == true;
     }
   }
 }
 ```
+
+`admin == true` is a custom claim baked into the token by `mintBenchmarkAdminToken` (in RaterSystemNew's `functions/index.js`) — it's what distinguishes a Lenguax admin session from a centre login; both are otherwise just "an authenticated user."
 
 `benchmark_results`/`benchmark_flags` hold candidate PII (name/email), so admin reads require Firebase Auth in this project. RaterSystemNew bridges its own admin's identity in via the `mintBenchmarkAdminToken` Cloud Function (defined in `RaterSystemNew/functions/index.js`), which mints a custom token for this project after checking `people/{uid}.role === 'admin'` in `ratersystem`. `BenchmarkPage.tsx` signs into a secondary `benchmarkAuth` connection with that token before querying.
 
@@ -317,4 +352,5 @@ Audio upload (RaterSystemNew item editor → Storage) and playback (`AudioPlayer
 - [x] Listening items: audio upload (RaterSystemNew) + playback (`AudioPlayer.jsx`) wired up 2026-07-18 — no audio items authored yet
 - [x] Flag → correct tracking: `active` toggle for immediate exposure control, `correctedAt` + "Mark corrected" + since-correction stat for tracking fresh data after a fix
 - [x] Standalone `/admin` page removed 2026-07-18 — RaterSystemNew is the sole admin surface now
+- [x] Centre portal (`/centre`) added 2026-07-18 — `?centre=` link tagging, scoped read access enforced via Firestore rules + `centre_accounts` docs, `admin:true` claim distinguishes Lenguax admins from centre logins — **no centre accounts provisioned yet**, needs the manual Auth-user + Firestore-doc step per centre
 - [ ] Adaptive test logic (post-trial)

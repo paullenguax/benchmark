@@ -21,8 +21,9 @@ Candidates are randomly assigned Form A or Form B (40 items each) and answer a f
 | Collection | Who writes | Who reads |
 |---|---|---|
 | `benchmark_items` | Admin (via RaterSystemNew) | Public (candidate app) |
-| `benchmark_results` | Public (candidate app, create only) | Admin only (authenticated via RaterSystemNew's `mintBenchmarkAdminToken`) |
+| `benchmark_results` | Public (candidate app, create only) | Admin (everyone) or a centre account (only its own `centreId`) |
 | `benchmark_flags` | Public (candidate app, create only) | Admin only |
+| `centre_accounts` | Admin only | The account owner, or admin |
 
 Audio for listening items lives in Storage under `benchmark-audio/` (public read, admin-only write) — see `firestore.rules`/`storage.rules` in this repo.
 
@@ -71,8 +72,9 @@ VITE_FIREBASE_PROJECT_ID=...
 VITE_FIREBASE_STORAGE_BUCKET=...
 VITE_FIREBASE_MESSAGING_SENDER_ID=...
 VITE_FIREBASE_APP_ID=...
-VITE_ADMIN_PASSWORD=...
 ```
+
+(`VITE_ADMIN_PASSWORD` is no longer read anywhere in this app — the GitHub Actions secret can be removed whenever convenient.)
 
 ## Deployment
 
@@ -88,10 +90,26 @@ Item management, results, and item analysis are handled inside RaterSystemNew at
 
 The standalone password-gated `/admin` page that used to live in this repo has been removed (2026-07-18) — it duplicated the RaterSystemNew tabs and had no auth bridge, so it broke once `benchmark_results`/`benchmark_flags` reads started requiring `request.auth != null`.
 
+## Centres
+
+Training centres can send the test to their own trainees and see only their own results — not everyone's — at `lenguax.com/benchmark/centre`. Set up:
+
+1. **Give the centre a tagged link**: `lenguax.com/benchmark/?centre=<centre-id>` (pick a short slug, e.g. `oxford-aviation`). Every result submitted through that link is stamped with `centreId: "<centre-id>"`.
+2. **Create their login** — no admin UI for this, it's a two-step manual process (same pattern as adding a senior rater in RaterSystemNew):
+   - Firebase Console → `lenguax-benchmark-32392` project → Authentication → **Add user** (an email + password for the centre) → copy the UID it generates.
+   - Firestore → `centre_accounts` collection → create a doc with that **UID as the document ID**, containing:
+     ```json
+     { "centreId": "oxford-aviation", "centreName": "Oxford Aviation Academy" }
+     ```
+     `centreId` must exactly match the slug you used in their link. `centreName` is just the display label shown in their portal.
+3. **Give the centre their login + link.** They go to `lenguax.com/benchmark/centre`, sign in, and see a read-only table of their trainees' results (name, self-reported level, score, ICAO level, date) — nothing else, no other centre's data, no item bank, no flags.
+
+One shared login per centre (not per staff member) keeps this to a two-minute setup. Enforcement is in Firestore's security rules, not just the page's own query — a centre login cannot fetch another centre's results even by inspecting/modifying network requests.
+
 ## Notes
 
 - SiteGround caches aggressively — hard refresh (Ctrl+Shift+R) after deploys
 
 ## Last updated
 
-2026-07-18
+2026-07-18 (added centre portal)
