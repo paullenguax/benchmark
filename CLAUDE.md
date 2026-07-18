@@ -8,7 +8,7 @@ ICAO English level screener for aviation candidates. React 19 + Vite (no TypeScr
 - Firebase collections: `benchmark_items` (public read), `benchmark_results`/`benchmark_flags` (public create only — reads require Firebase Auth, admin-only)
 - Item schema has three constructs (`vocabulary`/`structure`/`comprehension`) and two modalities (`reading`/`listening`, with `audioRef` as a Storage download URL)
 - Admin UI lives in **RaterSystemNew** at `/benchmark`, not here — items are edited directly in Firestore there, `benchmark_items_v01.json` is a historical snapshot only, not re-seeded
-- The standalone `/admin` page here is legacy, pending removal
+- There is no admin page in this repo anymore (removed 2026-07-18) — don't re-add one, it'll just drift out of sync with RaterSystemNew's again
 - Brand colors `#00528C` / `#B3C8D9` (CSS variables, matches Accent Course)
 - Vite base is `/benchmark/`
 - Env vars needed: `VITE_FIREBASE_*` (6 vars) + `VITE_ADMIN_PASSWORD`

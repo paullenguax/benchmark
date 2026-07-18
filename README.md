@@ -84,9 +84,9 @@ Firestore/Storage security rules for the `lenguax-benchmark-32392` project live 
 
 ## Admin
 
-Item management, results, and item analysis are handled inside RaterSystemNew at `/benchmark` (admin only) — this is the only supported admin surface; edit items there, not by hand-editing `benchmark_items_v01.json` and reseeding (that workflow is retired now that the real schema is editable directly). RaterSystemNew authenticates into this project via a Cloud Function (`mintBenchmarkAdminToken`) rather than reading the collections unauthenticated.
+Item management, results, and item analysis are handled inside RaterSystemNew at `/benchmark` (admin only) — this is the only admin surface; edit items there, not by hand-editing `benchmark_items_v01.json` and reseeding (that workflow is retired now that the real schema is editable directly). RaterSystemNew authenticates into this project via a Cloud Function (`mintBenchmarkAdminToken`) rather than reading the collections unauthenticated.
 
-The standalone `/admin` page in this repo (password-gated) is legacy and scheduled for removal once the RaterSystemNew admin is confirmed working end-to-end in production.
+The standalone password-gated `/admin` page that used to live in this repo has been removed (2026-07-18) — it duplicated the RaterSystemNew tabs and had no auth bridge, so it broke once `benchmark_results`/`benchmark_flags` reads started requiring `request.auth != null`.
 
 ## Notes
 

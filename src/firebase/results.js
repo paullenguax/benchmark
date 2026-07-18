@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, orderBy, query, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from './config'
 
 export async function saveResult(result) {
@@ -24,14 +24,4 @@ export async function saveFlag({ itemId, comment, candidateEmail }) {
     candidateEmail: candidateEmail ?? null,
     timestamp: serverTimestamp(),
   })
-}
-
-export async function fetchTrialResults() {
-  const snap = await getDocs(query(collection(db, 'benchmark_results'), orderBy('timestamp', 'desc')))
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
-}
-
-export async function fetchFlags() {
-  const snap = await getDocs(query(collection(db, 'benchmark_flags'), orderBy('timestamp', 'desc')))
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }))
 }

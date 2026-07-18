@@ -214,8 +214,8 @@ Same Firestore project, connected via a named secondary Firebase app (`benchmark
 - **Item analysis** — per-item stats: attempts, % correct (red <30%, green >85%), flag count + comments, "Mark corrected" action (sets `correctedAt`), and a "since correction" stat computed only from responses after that timestamp. Filterable by form, sortable by ID / difficulty / flags
 - **Item bank** — full CRUD editor matching the real item schema exactly (`stem`/`form`/index-based `correct`/`stimulus`/`audioRef` with upload/`notes`), a construct×form coverage summary, active/inactive toggle
 
-### Benchmark admin (`lenguax.com/benchmark/admin`) — legacy, scheduled for removal
-Password-gated (VITE_ADMIN_PASSWORD) standalone admin in this repo. Duplicates the RaterSystemNew tabs above but reads/writes unauthenticated (works only while `benchmark_results`/`benchmark_flags` reads stay open — it will break once those rules require `request.auth != null`, since this page has no auth bridge). Keep it read-only at most until RaterSystemNew's admin is verified working in production, then delete `Admin.jsx` and its route.
+### Benchmark admin (`lenguax.com/benchmark/admin`) — removed 2026-07-18
+Used to be a password-gated standalone admin in this repo, duplicating the RaterSystemNew tabs above but reading/writing unauthenticated. Deleted (`Admin.jsx` + its route + the admin-only Firestore helpers in `firebase/items.js`/`firebase/results.js`) once RaterSystemNew's admin was confirmed working in production — it would have been broken anyway once `benchmark_results`/`benchmark_flags` reads started requiring `request.auth != null`. `VITE_ADMIN_PASSWORD` is no longer read anywhere in this app; the GitHub Actions secret can be removed whenever convenient.
 
 ---
 
@@ -316,5 +316,5 @@ Audio upload (RaterSystemNew item editor → Storage) and playback (`AudioPlayer
 - [x] Comprehension construct: schema, scoring, and UI support added 2026-07-18 — **no comprehension items authored yet** (0 of 80 items), needs content
 - [x] Listening items: audio upload (RaterSystemNew) + playback (`AudioPlayer.jsx`) wired up 2026-07-18 — no audio items authored yet
 - [x] Flag → correct tracking: `active` toggle for immediate exposure control, `correctedAt` + "Mark corrected" + since-correction stat for tracking fresh data after a fix
-- [ ] Standalone `/admin` page in this repo: legacy, pending removal once RaterSystemNew admin verified working in production (needs a benchmark-project service-account key set as a Cloud Functions secret + rules deploy first)
+- [x] Standalone `/admin` page removed 2026-07-18 — RaterSystemNew is the sole admin surface now
 - [ ] Adaptive test logic (post-trial)
