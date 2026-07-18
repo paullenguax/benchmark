@@ -92,19 +92,20 @@ The standalone password-gated `/admin` page that used to live in this repo has b
 
 ## Centres
 
-Training centres can send the test to their own trainees and see only their own results — not everyone's — at `lenguax.com/benchmark/centre`. Set up:
+Training centres can send the test to their own trainees and see only their own results — not everyone's — at `lenguax.com/benchmark/centre`.
 
-1. **Give the centre a tagged link**: `lenguax.com/benchmark/?centre=<centre-id>` (pick a short slug, e.g. `oxford-aviation`). Every result submitted through that link is stamped with `centreId: "<centre-id>"`.
-2. **Create their login** — no admin UI for this, it's a two-step manual process (same pattern as adding a senior rater in RaterSystemNew):
-   - Firebase Console → `lenguax-benchmark-32392` project → Authentication → **Add user** (an email + password for the centre) → copy the UID it generates.
-   - Firestore → `centre_accounts` collection → create a doc with that **UID as the document ID**, containing:
-     ```json
-     { "centreId": "oxford-aviation", "centreName": "Oxford Aviation Academy" }
-     ```
-     `centreId` must exactly match the slug you used in their link. `centreName` is just the display label shown in their portal.
-3. **Give the centre their login + link.** They go to `lenguax.com/benchmark/centre`, sign in, and see a read-only table of their trainees' results (name, self-reported level, score, ICAO level, date) — nothing else, no other centre's data, no item bank, no flags.
+**Set up a centre from RaterSystemNew** → `/benchmark` → **Centres** tab → **New centre**: fill in the centre's name, a short slug (e.g. `oxford-aviation` — becomes their `centreId`), and a login email/password. This creates their Firebase Auth login and the matching `centre_accounts` doc together (`createBenchmarkCentreAccount` Cloud Function) — no manual Firebase Console steps needed. The Centres tab also shows a "Copy link" button per centre (`lenguax.com/benchmark/?centre=<centreId>`) and a delete action.
 
-One shared login per centre (not per staff member) keeps this to a two-minute setup. Enforcement is in Firestore's security rules, not just the page's own query — a centre login cannot fetch another centre's results even by inspecting/modifying network requests.
+Give the centre that link + their login. They go to `lenguax.com/benchmark/centre`, sign in, and see a read-only table of their trainees' results (name, self-reported level, score, ICAO level, date) — nothing else, no other centre's data, no item bank, no flags.
+
+One shared login per centre (not per staff member) keeps this simple. Enforcement is in Firestore's security rules, not just the page's own query or the admin UI — a centre login cannot fetch another centre's results even by inspecting/modifying network requests, and the create function itself rejects a `centreId` that's already in use by a different account.
+
+<details>
+<summary>Manual fallback (if the Centres tab or its Cloud Functions are ever unavailable)</summary>
+
+1. Firebase Console → `lenguax-benchmark-32392` project → Authentication → **Add user** (email + password) → copy the UID.
+2. Firestore → `centre_accounts` collection → create a doc with that **UID as the document ID**: `{ "centreId": "oxford-aviation", "centreName": "Oxford Aviation Academy" }`. `centreId` must exactly match the link's `?centre=` value.
+</details>
 
 ## Notes
 
@@ -112,4 +113,4 @@ One shared login per centre (not per staff member) keeps this to a two-minute se
 
 ## Last updated
 
-2026-07-18 (added centre portal)
+2026-07-18 (added centre portal + admin UI to provision centres)

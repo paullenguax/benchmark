@@ -232,10 +232,7 @@ Lets a training centre log in and see only its own trainees' results — the fea
 
 **How submissions get tagged:** give each centre a link with a query param, e.g. `lenguax.com/benchmark/?centre=oxford-aviation`. `Home.jsx` reads `?centre=` once (`useSearchParams`) and carries it through `Trial.jsx` into the saved `benchmark_results` doc as `centreId`. No param = `centreId: null` (untagged/direct candidates, visible only to Lenguax admins).
 
-**How a centre account is provisioned (manual, no UI — same pattern as adding a rater in RaterSystemNew):**
-1. Firebase Console → `lenguax-benchmark-32392` → Authentication → Add user (email + password) → copy the UID.
-2. Firestore → create a doc in `centre_accounts` with that UID as the **document ID**; fields: `centreId` (must exactly match the `?centre=` value you gave them) and `centreName` (display label, shown as the portal heading).
-3. Give the centre their login email/password and their tagged link (`?centre=<their centreId>`). One shared login per centre, not per staff member.
+**How a centre account is provisioned:** RaterSystemNew `/benchmark` → **Centres** tab → **New centre** — takes centre name, `centreId` slug, login email/password, and calls `createBenchmarkCentreAccount` (a Cloud Function that creates the Auth user and the matching `centre_accounts/{uid}` doc together, and rejects a `centreId` already in use by another account). The tab also lists existing centres with a copy-link button and delete (`deleteBenchmarkCentreAccount`). Manual fallback (Console → Auth → Add user, then create the Firestore doc by hand with that UID) still works if the tab or its functions are ever unavailable — same underlying data shape either way.
 
 **Enforcement is server-side, not just UI filtering** — `firestore.rules`: a result is readable if `request.auth.token.admin == true` (admins, via `mintBenchmarkAdminToken`'s custom claim) **or** the caller's `centre_accounts/{uid}.centreId` matches the result's `centreId`. A centre login literally cannot fetch another centre's (or an untagged candidate's) data, even by tampering with the client. `centre_accounts/{uid}` itself is readable only by that uid or an admin, writable only by an admin.
 
@@ -352,5 +349,6 @@ Audio upload (RaterSystemNew item editor → Storage) and playback (`AudioPlayer
 - [x] Listening items: audio upload (RaterSystemNew) + playback (`AudioPlayer.jsx`) wired up 2026-07-18 — no audio items authored yet
 - [x] Flag → correct tracking: `active` toggle for immediate exposure control, `correctedAt` + "Mark corrected" + since-correction stat for tracking fresh data after a fix
 - [x] Standalone `/admin` page removed 2026-07-18 — RaterSystemNew is the sole admin surface now
-- [x] Centre portal (`/centre`) added 2026-07-18 — `?centre=` link tagging, scoped read access enforced via Firestore rules + `centre_accounts` docs, `admin:true` claim distinguishes Lenguax admins from centre logins — **no centre accounts provisioned yet**, needs the manual Auth-user + Firestore-doc step per centre
+- [x] Centre portal (`/centre`) added 2026-07-18 — `?centre=` link tagging, scoped read access enforced via Firestore rules + `centre_accounts` docs, `admin:true` claim distinguishes Lenguax admins from centre logins
+- [x] Centres tab in RaterSystemNew admin (2026-07-18) — create/list/delete centre accounts without touching the Firebase Console — **no real centres provisioned yet**, needs first use
 - [ ] Adaptive test logic (post-trial)

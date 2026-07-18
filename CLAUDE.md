@@ -10,6 +10,7 @@ ICAO English level screener for aviation candidates. React 19 + Vite (no TypeScr
 - Admin UI lives in **RaterSystemNew** at `/benchmark`, not here — items are edited directly in Firestore there, `benchmark_items_v01.json` is a historical snapshot only, not re-seeded
 - There is no admin page in this repo anymore (removed 2026-07-18) — don't re-add one, it'll just drift out of sync with RaterSystemNew's again
 - `/centre` is a *different* thing from admin — a read-only, scoped-to-one-centre login (see README's "Centres" section). `request.auth.token.admin == true` (set by RaterSystemNew's `mintBenchmarkAdminToken`) is what distinguishes an admin session from a centre login in `firestore.rules` — don't loosen `benchmark_results`/`benchmark_flags` rules without keeping that distinction
+- Centre accounts are provisioned from RaterSystemNew's Benchmark page (Centres tab), not by hand — `createBenchmarkCentreAccount`/`deleteBenchmarkCentreAccount` Cloud Functions own that two-step (Auth user + `centre_accounts` doc) so it can't drift out of sync
 - Candidate links can carry `?centre=<id>` (read once in `Home.jsx`), which tags the result's `centreId` — untagged links are fine, they just mean "not attributed to a centre"
 - Brand colors `#00528C` / `#B3C8D9` (CSS variables, matches Accent Course)
 - Vite base is `/benchmark/`
