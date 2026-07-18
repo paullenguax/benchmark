@@ -15,8 +15,8 @@ This assesses reading comprehension only at B1–C1 band (ICAO 4–6), using avi
 The trial collects response data on all 80 reading items to validate item difficulty before building adaptive logic.
 
 **The trial version:**
-- Randomly assigns each candidate to Form A or Form B (40 items each, balanced by band and construct)
-- Presents the 40 items in a randomised order
+- Randomly assigns each candidate to Form A or Form B (40 items each at launch — grows as items are added; there's no sampling/cap, a candidate sees every active item tagged to their form)
+- Presents listening items first as their own shuffled block (with a one-time "Listening section" intro screen), then every other item shuffled together regardless of construct
 - Collects candidate name, email, and self-reported ICAO level at the start (all optional)
 - Stores every item response (item ID, option selected, correct/incorrect, flag comment) to Firestore
 - Allows candidates to flag any item with a short comment ("What seems wrong with this question?")

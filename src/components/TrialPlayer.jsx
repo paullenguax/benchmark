@@ -74,11 +74,18 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
   const [selected, setSelected] = useState(null)
   const [responses, setResponses] = useState([])
   const [flags, setFlags] = useState({})
+  const [showListeningIntro, setShowListeningIntro] = useState(false)
   const cardRef = useRef(null)
 
   useEffect(() => {
-    const formItems = items.filter(i => i.form === form)
-    setQueue(shuffle(formItems.map(normalizeItem)))
+    const formItems = items.filter(i => i.form === form).map(normalizeItem)
+    // Listening items go first, as their own shuffled block, so they can be
+    // introduced with a short transition screen — everything else (reading,
+    // regardless of construct) stays shuffled together after that.
+    const listening = shuffle(formItems.filter(i => i.modality === 'listening'))
+    const other = shuffle(formItems.filter(i => i.modality !== 'listening'))
+    setQueue([...listening, ...other])
+    setShowListeningIntro(listening.length > 0)
   }, [items, form])
 
   useEffect(() => {
@@ -125,6 +132,23 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
   }
 
   if (!current) return <p className="loading">Loading…</p>
+
+  if (showListeningIntro) {
+    return (
+      <div className="test-player">
+        <section className="home-intro" aria-labelledby="listening-intro-heading">
+          <h2 id="listening-intro-heading">Listening section</h2>
+          <p>
+            The next few questions include an audio clip. Play it as many times as you like
+            before choosing your answer — there's no time limit.
+          </p>
+        </section>
+        <button className="btn-start" onClick={() => setShowListeningIntro(false)}>
+          Begin
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div className="test-player">

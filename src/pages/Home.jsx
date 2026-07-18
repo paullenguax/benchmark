@@ -33,8 +33,9 @@ export default function Home() {
             based on multiple choice questions. It takes approximately 10–15 minutes.
           </p>
           <p>
-            In this trial version you will see 40 items presented in random order. Work through
-            them at your own pace, there is no time limit.
+            In this trial version you will work through a set of multiple-choice items — mostly
+            in random order, with any listening items grouped together as their own short
+            section. Work through them at your own pace, there is no time limit.
           </p>
           <p className="disclaimer-small">
             This is not a formal ICAO assessment. It does not test speaking, writing,
