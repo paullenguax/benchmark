@@ -124,9 +124,10 @@ export default function TrialResultsScreen({ result, candidateName }) {
       )}
 
       <p className="disclaimer">
-        This benchmark assesses reading comprehension only. It does not assess speaking,
-        writing, pronunciation, or fluency, and should not be used as a substitute for
-        a formal ICAO language proficiency assessment.
+        This benchmark assesses reading and listening comprehension only, and should not
+        be used as a substitute for a formal ICAO language proficiency assessment. A formal
+        assessment will include assessment of Pronunciation, Spoken Structure, Vocabulary
+        and Fluency, as well as Interactions.
       </p>
 
       <button

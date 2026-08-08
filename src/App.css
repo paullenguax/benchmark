@@ -246,7 +246,7 @@ code {
   line-height: 1.7;
 }
 
-.stimulus p { margin-bottom: 0; color: var(--text-primary); }
+.stimulus p { margin-bottom: 0; color: var(--text-primary); white-space: pre-line; }
 
 /* fieldset wraps the question legend + options — reset browser defaults */
 .question-fieldset {
@@ -264,6 +264,9 @@ code {
   display: block;
   float: none;
   padding: 0;
+  /* Preserve line breaks typed into the stem in the admin item editor —
+     plain text collapses them by default. */
+  white-space: pre-line;
 }
 
 .options {

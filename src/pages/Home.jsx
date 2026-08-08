@@ -44,8 +44,9 @@ export default function Home() {
             section. Work through them at your own pace, there is no time limit.
           </p>
           <p className="disclaimer-small">
-            This is not a formal ICAO assessment. It does not test speaking, writing,
-            pronunciation, or fluency.
+            This is not a formal ICAO assessment — it only tests reading and listening
+            comprehension. A formal assessment will include assessment of Pronunciation,
+            Spoken Structure, Vocabulary and Fluency, as well as Interactions.
           </p>
         </section>
 

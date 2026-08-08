@@ -4,6 +4,10 @@ import { saveFlag } from '../firebase/results'
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
 
+// How many unscored field-test items to slip into each sitting, regardless
+// of how large the pilot pool grows to — keeps sitting length stable.
+const PILOT_SAMPLE_SIZE = 5
+
 function shuffle(arr) {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -11,6 +15,38 @@ function shuffle(arr) {
     [a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+// Weighted random sample (without replacement) of pilot items, favouring
+// items with fewer responses so far (pilotAttempts, maintained server-side
+// by incrementPilotItemAttempts) so the pool converges on even sample sizes
+// faster than plain random draws would. At most one item per pairKey is
+// picked per sitting, so related minimal pairs don't cluster together.
+function samplePilotItems(pilotItems, n) {
+  const pool = [...pilotItems]
+  const picked = []
+  const usedPairKeys = new Set()
+
+  while (picked.length < n && pool.length > 0) {
+    const eligible = pool.filter(i => !i.pairKey || !usedPairKeys.has(i.pairKey))
+    const candidates = eligible.length > 0 ? eligible : pool
+
+    const weights = candidates.map(i => 1 / ((i.pilotAttempts ?? 0) + 1))
+    const totalWeight = weights.reduce((a, b) => a + b, 0)
+    let r = Math.random() * totalWeight
+    let idx = candidates.length - 1
+    for (let i = 0; i < candidates.length; i++) {
+      r -= weights[i]
+      if (r <= 0) { idx = i; break }
+    }
+
+    const chosen = candidates[idx]
+    picked.push(chosen)
+    if (chosen.pairKey) usedPairKeys.add(chosen.pairKey)
+    pool.splice(pool.findIndex(i => i.id === chosen.id), 1)
+  }
+
+  return picked
 }
 
 // Map new item schema (stem / 0-based correct index) to what QuestionCard expects
@@ -34,10 +70,12 @@ function computeScores(responses, itemMap) {
     comprehension: { correct: 0, total: 0 },
   }
   let totalCorrect = 0
+  let totalItems = 0
 
   for (const r of responses) {
     const item = itemMap[r.itemId]
-    if (!item) continue
+    if (!item || item.pilot) continue
+    totalItems++
     band[item.band].total++
     if (construct[item.construct]) construct[item.construct].total++
     if (r.correct) {
@@ -47,7 +85,6 @@ function computeScores(responses, itemMap) {
     }
   }
 
-  const totalItems = responses.length
   const pct = totalItems > 0 ? totalCorrect / totalItems : 0
   const indicativeLevel =
     pct < 0.4 ? 'below4' :
@@ -78,12 +115,20 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
   const cardRef = useRef(null)
 
   useEffect(() => {
-    const formItems = items.filter(i => i.form === form).map(normalizeItem)
+    const formItems = items.filter(i => i.form === form && !i.pilot).map(normalizeItem)
+    // Pilot (unscored field-test) items are independent of the A/B form
+    // split — sample a handful from the whole pool and slot them in
+    // alongside the scored items, indistinguishable in the UI.
+    const pilotItems = samplePilotItems(
+      items.filter(i => i.pilot).map(normalizeItem),
+      PILOT_SAMPLE_SIZE,
+    )
+    const allItems = [...formItems, ...pilotItems]
     // Listening items go first, as their own shuffled block, so they can be
     // introduced with a short transition screen — everything else (reading,
     // regardless of construct) stays shuffled together after that.
-    const listening = shuffle(formItems.filter(i => i.modality === 'listening'))
-    const other = shuffle(formItems.filter(i => i.modality !== 'listening'))
+    const listening = shuffle(allItems.filter(i => i.modality === 'listening'))
+    const other = shuffle(allItems.filter(i => i.modality !== 'listening'))
     setQueue([...listening, ...other])
     setShowListeningIntro(listening.length > 0)
   }, [items, form])
