@@ -112,6 +112,8 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
   const [responses, setResponses] = useState([])
   const [flags, setFlags] = useState({})
   const [showListeningIntro, setShowListeningIntro] = useState(false)
+  const [showReadingIntro, setShowReadingIntro] = useState(false)
+  const [listeningCount, setListeningCount] = useState(0)
   const cardRef = useRef(null)
 
   useEffect(() => {
@@ -130,12 +132,13 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
     const listening = shuffle(allItems.filter(i => i.modality === 'listening'))
     const other = shuffle(allItems.filter(i => i.modality !== 'listening'))
     setQueue([...listening, ...other])
+    setListeningCount(listening.length)
     setShowListeningIntro(listening.length > 0)
   }, [items, form])
 
   useEffect(() => {
-    cardRef.current?.focus()
-  }, [index])
+    if (!showListeningIntro && !showReadingIntro) cardRef.current?.focus()
+  }, [index, showListeningIntro, showReadingIntro])
 
   const current = queue[index]
   const total = queue.length
@@ -172,7 +175,13 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
       const scores = computeScores(updatedResponses, itemMap)
       onComplete({ responses: updatedResponses, scores, form })
     } else {
-      setIndex(index + 1)
+      const nextIndex = index + 1
+      // Just finished the listening block, with more (reading) items still
+      // to come — flag the hand-off instead of dropping straight into it.
+      if (listeningCount > 0 && nextIndex === listeningCount) {
+        setShowReadingIntro(true)
+      }
+      setIndex(nextIndex)
     }
   }
 
@@ -191,6 +200,23 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
         </section>
         <button className="btn-start" onClick={() => setShowListeningIntro(false)}>
           Begin
+        </button>
+      </div>
+    )
+  }
+
+  if (showReadingIntro) {
+    return (
+      <div className="test-player">
+        <section className="home-intro" aria-labelledby="reading-intro-heading">
+          <h2 id="reading-intro-heading">Reading section</h2>
+          <p>
+            That's the listening section done. The rest of the questions are read on
+            screen, at your own pace — there's no time limit.
+          </p>
+        </section>
+        <button className="btn-start" onClick={() => setShowReadingIntro(false)}>
+          Continue
         </button>
       </div>
     )
