@@ -1,33 +1,95 @@
-const LEVEL_LABELS = {
-  'below4': 'Below ICAO Level 4',
-  '4': 'ICAO Level 4 — Operational',
-  '5': 'ICAO Level 5 — Extended',
-  '6': 'ICAO Level 6 — Expert',
-}
+import { useState } from 'react'
+import { saveFlag } from '../firebase/results'
 
-const LEVEL_DESCRIPTIONS = {
-  'below4': 'Reading comprehension is below the operational threshold. Significant language training is recommended before an ICAO assessment.',
-  '4': 'Operational-level comprehension. Handles straightforward aviation texts but may struggle with complex or non-routine language.',
-  '5': 'Extended competence. Handles complex and non-routine language well with only occasional difficulty.',
-  '6': 'Expert-level comprehension across all item types, including high-inference and syntactically complex items.',
-}
+const OPTION_LABELS = ['A', 'B', 'C', 'D']
 
 function pct(correct, total) {
   if (total === 0) return '—'
   return Math.round((correct / total) * 100) + '%'
 }
 
-export default function TrialResultsScreen({ result, candidateName }) {
+function ReviewItem({ response, item, candidateEmail }) {
+  const [showFlagForm, setShowFlagForm] = useState(false)
+  const [flagInput, setFlagInput] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  if (!item) return null
+
+  async function handleFlagSubmit(e) {
+    e.preventDefault()
+    const comment = flagInput.trim()
+    if (!comment) return
+    try {
+      await saveFlag({ itemId: response.itemId, comment, candidateEmail })
+      setSubmitted(true)
+      setShowFlagForm(false)
+    } catch {
+      // save failure is non-critical — they just won't see confirmation
+    }
+  }
+
+  const yourText = item.options[OPTION_LABELS.indexOf(response.selected)]
+  const correctText = item.options[OPTION_LABELS.indexOf(item.correct)]
+
+  return (
+    <div className="review-item">
+      <p className="review-question">{item.question}</p>
+      <p className="review-answer review-answer--wrong">
+        Your answer: <strong>{response.selected}</strong> — {yourText}
+      </p>
+      <p className="review-answer review-answer--correct">
+        Correct answer: <strong>{item.correct}</strong> — {correctText}
+      </p>
+
+      <div className="flag-area">
+        {response.flagComment || submitted ? (
+          <span className="flag-indicator" aria-label="You flagged this item">
+            Flagged{response.flagComment ? `: "${response.flagComment}"` : ''}
+          </span>
+        ) : showFlagForm ? (
+          <form className="flag-form" onSubmit={handleFlagSubmit}>
+            <input
+              type="text"
+              className="flag-input"
+              value={flagInput}
+              onChange={e => setFlagInput(e.target.value)}
+              placeholder="What seems wrong with this question?"
+              autoFocus
+              maxLength={200}
+              aria-label="Flag comment"
+            />
+            <button type="submit" className="btn-flag-submit" disabled={!flagInput.trim()}>
+              Submit
+            </button>
+            <button
+              type="button"
+              className="btn-flag-cancel"
+              onClick={() => { setShowFlagForm(false); setFlagInput('') }}
+            >
+              Cancel
+            </button>
+          </form>
+        ) : (
+          <button
+            className="btn-flag"
+            onClick={() => setShowFlagForm(true)}
+            aria-label="Flag this question as unfair or incorrect"
+          >
+            ? Flag as unfair
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default function TrialResultsScreen({ result, candidateName, candidateEmail, itemsById = {} }) {
   const { scores, responses, form } = result
-  const {
-    band4, band5, band6,
-    vocabulary, structure, comprehension,
-    totalCorrect, totalItems,
-    indicativeLevel,
-  } = scores
+  const { vocabulary, structure, comprehension, totalCorrect, totalItems } = scores
 
   const flagCount = responses.filter(r => r.flagComment).length
   const overallPct = pct(totalCorrect, totalItems)
+  const wrongResponses = responses.filter(r => !r.correct)
 
   return (
     <div className="results-screen">
@@ -37,52 +99,12 @@ export default function TrialResultsScreen({ result, candidateName }) {
         <p className="candidate-name">Results for: <strong>{candidateName}</strong></p>
       )}
 
-      <div
-        className={`level-badge level-${indicativeLevel}`}
-        role="region"
-        aria-label="Indicative level"
-      >
-        <span className="level-label">{LEVEL_LABELS[indicativeLevel]}</span>
-        <span className="level-note">Indicative result — not a formal ICAO assessment</span>
+      <div className="score-headline" role="region" aria-label="Your score">
+        <span className="score-headline-number">{totalCorrect} / {totalItems} correct</span>
+        <span className="score-headline-pct">{overallPct}</span>
       </div>
-
-      <p className="level-description">{LEVEL_DESCRIPTIONS[indicativeLevel]}</p>
 
       {form && <p className="form-badge">Form {form}</p>}
-
-      <p className="score-summary">
-        Overall: <strong>{totalCorrect} / {totalItems}</strong> ({overallPct})
-      </p>
-
-      <div className="score-breakdown">
-        <h2>Score by band</h2>
-        <table aria-label="Score breakdown by ICAO band">
-          <thead>
-            <tr>
-              <th scope="col">Band</th>
-              <th scope="col">Score</th>
-              <th scope="col">%</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Band 4 — B1 operational</td>
-              <td>{band4.correct} / {band4.total}</td>
-              <td>{pct(band4.correct, band4.total)}</td>
-            </tr>
-            <tr>
-              <td>Band 5 — B2 extended</td>
-              <td>{band5.correct} / {band5.total}</td>
-              <td>{pct(band5.correct, band5.total)}</td>
-            </tr>
-            <tr>
-              <td>Band 6 — C1 expert</td>
-              <td>{band6.correct} / {band6.total}</td>
-              <td>{pct(band6.correct, band6.total)}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
 
       <div className="score-breakdown">
         <h2>Score by construct</h2>
@@ -115,6 +137,21 @@ export default function TrialResultsScreen({ result, candidateName }) {
           </tbody>
         </table>
       </div>
+
+      {wrongResponses.length > 0 && (
+        <div className="score-breakdown">
+          <h2>Questions to review</h2>
+          <p className="review-intro">
+            These are the questions you got wrong. If anything looks unfair or unclear, flag
+            it — it helps us improve the test.
+          </p>
+          <div className="review-list">
+            {wrongResponses.map((r, i) => (
+              <ReviewItem key={`${r.itemId}-${i}`} response={r} item={itemsById[r.itemId]} candidateEmail={candidateEmail} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {flagCount > 0 && (
         <p className="flag-note">

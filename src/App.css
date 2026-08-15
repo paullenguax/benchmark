@@ -480,34 +480,26 @@ code {
   margin-bottom: 1.5rem;
 }
 
-.level-badge {
+.score-headline {
   border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  background: var(--brand-light-bg);
+  border: 1px solid var(--brand);
 }
 
-.level-badge.level-below4 { background: #fef2f2; border: 1px solid #dc2626; }
-.level-badge.level-4      { background: var(--bg-secondary); border: 1px solid var(--border); }
-.level-badge.level-5      { background: var(--brand-light-bg); border: 1px solid var(--brand); }
-.level-badge.level-6      { background: #f0fdf4; border: 1px solid #16a34a; }
-
-.level-label {
+.score-headline-number {
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.level-note {
-  font-size: 0.8rem;
+.score-headline-pct {
+  font-size: 0.9rem;
   color: var(--text-muted);
-}
-
-.level-description {
-  font-size: 0.95rem;
-  margin-bottom: 1.25rem;
 }
 
 .form-badge {
@@ -566,6 +558,38 @@ code {
   padding: 0.5rem 0.75rem;
   color: var(--text-secondary);
 }
+
+.review-intro {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+}
+
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.review-item {
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
+.review-question {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  white-space: pre-line;
+}
+
+.review-answer {
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.review-answer--wrong { color: #dc2626; }
+.review-answer--correct { color: #16a34a; }
 
 .disclaimer {
   font-size: 0.82rem;

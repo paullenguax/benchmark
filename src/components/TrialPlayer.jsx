@@ -198,7 +198,11 @@ export default function TrialPlayer({ items, sectionsConfig, candidateEmail, onC
     if (index === queue.length - 1) {
       const itemMap = Object.fromEntries(queue.map(i => [i.id, i]))
       const scores = computeScores(updatedResponses, itemMap)
-      onComplete({ responses: updatedResponses, scores, form })
+      // itemMap carries question/option text for the results page's
+      // wrong-answer review — kept separate from the saved result so it
+      // never gets persisted to Firestore (it's just a duplicate of what's
+      // already in benchmark_items).
+      onComplete({ responses: updatedResponses, scores, form, itemMap })
     } else {
       const nextIndex = index + 1
       // A new section starts here, with more items still to come — flag the
@@ -244,7 +248,19 @@ export default function TrialPlayer({ items, sectionsConfig, candidateEmail, onC
         <span className="item-counter" aria-hidden="true">{index + 1} / {total}</span>
       </div>
 
-      <div key={current.id} ref={cardRef} tabIndex={-1}>
+      <div
+        key={current.id}
+        ref={cardRef}
+        tabIndex={-1}
+        onKeyDown={e => {
+          // Enter on an already-selected option advances to the next
+          // question — scoped to option buttons specifically so it doesn't
+          // hijack Enter on the Flag button or its comment form.
+          if (e.key !== 'Enter' || !selected || !e.target.classList?.contains('option-btn')) return
+          e.preventDefault()
+          handleNext()
+        }}
+      >
         <QuestionCard
           item={current}
           selected={selected}

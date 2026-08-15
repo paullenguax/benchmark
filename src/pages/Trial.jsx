@@ -26,7 +26,7 @@ export default function Trial() {
       .catch(err => setError(err.message))
   }, [])
 
-  async function handleComplete(result) {
+  async function handleComplete({ itemMap, ...result }) {
     const fullResult = {
       ...result,
       mode: 'trial',
@@ -40,7 +40,7 @@ export default function Trial() {
     } catch {
       // save failure is non-critical — still show results
     }
-    navigate('/trial-results', { state: { result: fullResult, candidateName } })
+    navigate('/trial-results', { state: { result: fullResult, candidateName, candidateEmail, itemsById: itemMap } })
   }
 
   if (error) return (

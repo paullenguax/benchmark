@@ -10,7 +10,12 @@ export default function TrialResults() {
     <div className="page results-page">
       <a href="#main-content" className="skip-link">Skip to content</a>
       <main id="main-content">
-        <TrialResultsScreen result={state.result} candidateName={state.candidateName} />
+        <TrialResultsScreen
+          result={state.result}
+          candidateName={state.candidateName}
+          candidateEmail={state.candidateEmail}
+          itemsById={state.itemsById ?? {}}
+        />
       </main>
     </div>
   )
