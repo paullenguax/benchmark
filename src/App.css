@@ -417,6 +417,22 @@ code {
   margin-bottom: 1.5rem;
 }
 
+.audio-player--exhausted audio {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.audio-plays-remaining {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.audio-player--exhausted .audio-plays-remaining {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
 .audio-placeholder {
   font-size: 0.85rem;
   color: var(--text-muted);
