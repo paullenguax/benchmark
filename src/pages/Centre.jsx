@@ -88,7 +88,7 @@ function CentreDashboard({ user }) {
         const q = query(collection(db, 'benchmark_results'), where('centreId', '==', centreData.centreId))
         const snap = await getDocs(q)
         if (cancelled) return
-        setResults(snap.docs.map(d => ({ id: d.id, ...d.data() })))
+        setResults(snap.docs.map(d => ({ ...d.data(), id: d.id })))
       } catch (err) {
         if (!cancelled) setError(err.message)
       }
