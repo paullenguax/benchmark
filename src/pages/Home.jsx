@@ -29,24 +29,24 @@ export default function Home() {
 
       <header className="home-header">
         <h1>Aviation English Benchmark</h1>
-        <p className="tagline">Indicative ICAO language proficiency screening</p>
+        <p className="tagline">Indicative language proficiency screening</p>
       </header>
 
       <main id="main-content">
         <section className="home-intro" aria-label="About this test">
           <p>
-            This free screener aims to give an indicative ICAO language proficiency level (4–6)
+            This free screener aims to give an indicative language proficiency level (4–6)
             based on multiple choice questions. It takes approximately 10–15 minutes.
           </p>
           <p>
-            In this trial version you will work through a set of multiple-choice items — mostly
+            In this trial version you will work through a set of multiple-choice items, mostly
             in random order, with any listening items grouped together as their own short
             section. Work through them at your own pace, there is no time limit.
           </p>
           <p className="disclaimer-small">
-            This is not a formal ICAO assessment — it only tests reading and listening
-            comprehension. A formal assessment will include assessment of Pronunciation,
-            Spoken Structure, Vocabulary and Fluency, as well as Interactions.
+            This is not a formal aviation English proficiency assessment. It only tests reading
+            and listening comprehension. A formal assessment will include assessment of
+            Pronunciation, Spoken Structure, Vocabulary and Fluency, as well as Interactions.
           </p>
         </section>
 
@@ -54,7 +54,7 @@ export default function Home() {
           <h2 id="before-heading">Before you begin</h2>
           <p>
             Name and email are optional. If provided, your result can be linked to a future
-            ICAO assessment for validity research.
+            formal assessment for validity research.
           </p>
 
           <div className="field-group">
@@ -82,18 +82,18 @@ export default function Home() {
           </div>
 
           <div className="field-group">
-            <label htmlFor="self-level">Your current ICAO level (optional)</label>
+            <label htmlFor="self-level">Your current level (optional)</label>
             <select
               id="self-level"
               value={selfReportedLevel}
               onChange={e => setSelfReportedLevel(e.target.value)}
             >
-              <option value="">— Select if known —</option>
-              <option value="4">Level 4 — Operational</option>
-              <option value="5">Level 5 — Extended</option>
-              <option value="6">Level 6 — Expert</option>
+              <option value="">Select if known</option>
+              <option value="4">Level 4 (Operational)</option>
+              <option value="5">Level 5 (Extended)</option>
+              <option value="6">Level 6 (Expert)</option>
               <option value="unsure">I have a level but I&apos;m not sure which</option>
-              <option value="none">I don&apos;t have an ICAO level yet</option>
+              <option value="none">I don&apos;t have a level yet</option>
             </select>
           </div>
 
