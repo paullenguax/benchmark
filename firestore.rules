@@ -6,6 +6,13 @@ service cloud.firestore {
       allow write: if request.auth != null && request.auth.token.admin == true;
     }
 
+    // Drives the candidate player's section order/copy/composition — see
+    // TestSection/SectionsConfig in RaterSystemNew's benchmark types.
+    match /benchmark_config/{id} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+
     // A centre account is one Firestore doc per Firebase Auth user (doc ID =
     // uid), created manually by an admin: { centreId, centreName }. Lets a
     // centre log in and see only its own trainees' results.

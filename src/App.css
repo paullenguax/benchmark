@@ -107,6 +107,10 @@ code {
   margin-bottom: 2.5rem;
 }
 
+.home-intro p {
+  white-space: pre-line;
+}
+
 .disclaimer-small {
   font-size: 0.85rem;
   color: var(--text-muted);

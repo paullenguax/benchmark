@@ -4,10 +4,6 @@ import { saveFlag } from '../firebase/results'
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D']
 
-// How many unscored field-test items to slip into each sitting, regardless
-// of how large the pilot pool grows to — keeps sitting length stable.
-const PILOT_SAMPLE_SIZE = 5
-
 function shuffle(arr) {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -47,6 +43,37 @@ function samplePilotItems(pilotItems, n) {
   }
 
   return picked
+}
+
+function matchesFilter(item, filter) {
+  if (filter.modality !== 'any' && item.modality !== filter.modality) return false
+  if (filter.construct !== 'any' && item.construct !== filter.construct) return false
+  if (filter.band !== 'any' && item.band !== filter.band) return false
+  return true
+}
+
+// Every section is form-split and scored — pulls all matching items from the
+// candidate's assigned form. Pilot items are sampled once from the whole
+// unscored pool (independent of section boundaries) and woven into
+// whichever section's filter they happen to match first, same as a Form-A/B
+// item would be — invisible to the candidate, excluded from scoring.
+function buildSectionBlocks(items, form, sections, pilotSampleCount) {
+  const sortedSections = [...sections].sort((a, b) => a.order - b.order)
+  const scoredItems = items.filter(i => i.form === form && !i.pilot).map(normalizeItem)
+  const pilotPool = items.filter(i => i.pilot).map(normalizeItem)
+  const sampledPilot = samplePilotItems(pilotPool, pilotSampleCount)
+
+  const buckets = sortedSections.map(() => [])
+  function place(item) {
+    const idx = sortedSections.findIndex(s => matchesFilter(item, s.filter))
+    if (idx !== -1) buckets[idx].push(item)
+  }
+  scoredItems.forEach(place)
+  sampledPilot.forEach(place)
+
+  return sortedSections
+    .map((section, i) => ({ section, items: shuffle(buckets[i]) }))
+    .filter(b => b.items.length > 0)
 }
 
 // Map new item schema (stem / 0-based correct index) to what QuestionCard expects
@@ -104,41 +131,39 @@ function computeScores(responses, itemMap) {
   }
 }
 
-export default function TrialPlayer({ items, candidateEmail, onComplete }) {
+export default function TrialPlayer({ items, sectionsConfig, candidateEmail, onComplete }) {
   const [form] = useState(() => Math.random() < 0.5 ? 'A' : 'B')
   const [queue, setQueue] = useState([])
   const [index, setIndex] = useState(0)
   const [selected, setSelected] = useState(null)
   const [responses, setResponses] = useState([])
   const [flags, setFlags] = useState({})
-  const [showListeningIntro, setShowListeningIntro] = useState(false)
-  const [showReadingIntro, setShowReadingIntro] = useState(false)
-  const [listeningCount, setListeningCount] = useState(0)
+  // Section boundaries the queue crosses: [{ index, section }], sorted by
+  // index — index is the queue position where that section's first item
+  // sits, so an intro screen shows right before it (if section.showIntro).
+  const [sectionBoundaries, setSectionBoundaries] = useState([])
+  const [pendingIntro, setPendingIntro] = useState(null)
   const cardRef = useRef(null)
 
   useEffect(() => {
-    const formItems = items.filter(i => i.form === form && !i.pilot).map(normalizeItem)
-    // Pilot (unscored field-test) items are independent of the A/B form
-    // split — sample a handful from the whole pool and slot them in
-    // alongside the scored items, indistinguishable in the UI.
-    const pilotItems = samplePilotItems(
-      items.filter(i => i.pilot).map(normalizeItem),
-      PILOT_SAMPLE_SIZE,
-    )
-    const allItems = [...formItems, ...pilotItems]
-    // Listening items go first, as their own shuffled block, so they can be
-    // introduced with a short transition screen — everything else (reading,
-    // regardless of construct) stays shuffled together after that.
-    const listening = shuffle(allItems.filter(i => i.modality === 'listening'))
-    const other = shuffle(allItems.filter(i => i.modality !== 'listening'))
-    setQueue([...listening, ...other])
-    setListeningCount(listening.length)
-    setShowListeningIntro(listening.length > 0)
-  }, [items, form])
+    const blocks = buildSectionBlocks(items, form, sectionsConfig.sections, sectionsConfig.pilotSampleCount)
+    const flatQueue = blocks.flatMap(b => b.items)
+
+    let cursor = 0
+    const boundaries = []
+    for (const b of blocks) {
+      if (b.section.showIntro) boundaries.push({ index: cursor, section: b.section })
+      cursor += b.items.length
+    }
+
+    setQueue(flatQueue)
+    setSectionBoundaries(boundaries)
+    setPendingIntro(boundaries[0]?.index === 0 ? boundaries[0].section : null)
+  }, [items, form, sectionsConfig])
 
   useEffect(() => {
-    if (!showListeningIntro && !showReadingIntro) cardRef.current?.focus()
-  }, [index, showListeningIntro, showReadingIntro])
+    if (!pendingIntro) cardRef.current?.focus()
+  }, [index, pendingIntro])
 
   const current = queue[index]
   const total = queue.length
@@ -176,47 +201,25 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
       onComplete({ responses: updatedResponses, scores, form })
     } else {
       const nextIndex = index + 1
-      // Just finished the listening block, with more (reading) items still
-      // to come — flag the hand-off instead of dropping straight into it.
-      if (listeningCount > 0 && nextIndex === listeningCount) {
-        setShowReadingIntro(true)
-      }
+      // A new section starts here, with more items still to come — flag the
+      // hand-off with its intro instead of dropping straight into it.
+      const boundary = sectionBoundaries.find(b => b.index === nextIndex)
+      if (boundary) setPendingIntro(boundary.section)
       setIndex(nextIndex)
     }
   }
 
   if (!current) return <p className="loading">Loading…</p>
 
-  if (showListeningIntro) {
+  if (pendingIntro) {
     return (
       <div className="test-player">
-        <section className="home-intro" aria-labelledby="listening-intro-heading">
-          <h2 id="listening-intro-heading">Listening section</h2>
-          <p>
-            The next few questions include an audio clip. Each clip can only be played a
-            limited number of times — check the counter under the player — so listen
-            carefully. There's no time limit to think it over.
-          </p>
+        <section className="home-intro" aria-labelledby="section-intro-heading">
+          <h2 id="section-intro-heading">{pendingIntro.title}</h2>
+          <p>{pendingIntro.introBody}</p>
         </section>
-        <button className="btn-start" onClick={() => setShowListeningIntro(false)}>
-          Begin
-        </button>
-      </div>
-    )
-  }
-
-  if (showReadingIntro) {
-    return (
-      <div className="test-player">
-        <section className="home-intro" aria-labelledby="reading-intro-heading">
-          <h2 id="reading-intro-heading">Reading section</h2>
-          <p>
-            That's the listening section done. The rest of the questions are read on
-            screen, at your own pace — there's no time limit.
-          </p>
-        </section>
-        <button className="btn-start" onClick={() => setShowReadingIntro(false)}>
-          Continue
+        <button className="btn-start" onClick={() => setPendingIntro(null)}>
+          {index === 0 ? 'Begin' : 'Continue'}
         </button>
       </div>
     )

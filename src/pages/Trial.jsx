@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import TrialPlayer from '../components/TrialPlayer'
 import { fetchItems } from '../firebase/items'
+import { fetchSectionsConfig } from '../firebase/sections'
 import { saveTrialResult } from '../firebase/results'
 
 export default function Trial() {
@@ -13,11 +14,15 @@ export default function Trial() {
   const centreId          = state?.centreId          ?? null
 
   const [items, setItems] = useState(null)
+  const [sectionsConfig, setSectionsConfig] = useState(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetchItems()
-      .then(setItems)
+    Promise.all([fetchItems(), fetchSectionsConfig()])
+      .then(([fetchedItems, fetchedSectionsConfig]) => {
+        setItems(fetchedItems)
+        setSectionsConfig(fetchedSectionsConfig)
+      })
       .catch(err => setError(err.message))
   }, [])
 
@@ -46,7 +51,7 @@ export default function Trial() {
     </div>
   )
 
-  if (!items) return (
+  if (!items || !sectionsConfig) return (
     <div className="page">
       <main id="main-content">
         <p className="loading" aria-live="polite">Loading…</p>
@@ -60,6 +65,7 @@ export default function Trial() {
       <main id="main-content">
         <TrialPlayer
           items={items}
+          sectionsConfig={sectionsConfig}
           candidateEmail={candidateEmail}
           onComplete={handleComplete}
         />
