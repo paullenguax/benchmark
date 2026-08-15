@@ -184,8 +184,9 @@ export default function TrialPlayer({ items, candidateEmail, onComplete }) {
         <section className="home-intro" aria-labelledby="listening-intro-heading">
           <h2 id="listening-intro-heading">Listening section</h2>
           <p>
-            The next few questions include an audio clip. Play it as many times as you like
-            before choosing your answer — there's no time limit.
+            The next few questions include an audio clip. Each clip can only be played a
+            limited number of times — check the counter under the player — so listen
+            carefully. There's no time limit to think it over.
           </p>
         </section>
         <button className="btn-start" onClick={() => setShowListeningIntro(false)}>

@@ -1,13 +1,14 @@
 import { useState } from 'react'
 
-const MAX_PLAYS = 2
+const DEFAULT_MAX_PLAYS = 2
 
-export default function AudioPlayer({ audioRef }) {
+export default function AudioPlayer({ audioRef, maxPlays }) {
   const [playCount, setPlayCount] = useState(0)
 
   if (!audioRef) return null
 
-  const playsLeft = Math.max(0, MAX_PLAYS - playCount)
+  const effectiveMax = maxPlays > 0 ? maxPlays : DEFAULT_MAX_PLAYS
+  const playsLeft = Math.max(0, effectiveMax - playCount)
   const exhausted = playsLeft === 0
 
   function handlePlay(e) {

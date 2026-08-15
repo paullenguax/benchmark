@@ -25,7 +25,7 @@ export default function QuestionCard({ item, selected, onSelect, onFlag, existin
       )}
 
       {item.modality === 'listening' && (
-        <AudioPlayer audioRef={item.audioRef} />
+        <AudioPlayer audioRef={item.audioRef} maxPlays={item.maxPlays} />
       )}
 
       <fieldset className="question-fieldset">
