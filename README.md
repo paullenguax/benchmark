@@ -107,10 +107,15 @@ One shared login per centre (not per staff member) keeps this simple. Enforcemen
 2. Firestore → `centre_accounts` collection → create a doc with that **UID as the document ID**: `{ "centreId": "oxford-aviation", "centreName": "Oxford Aviation Academy" }`. `centreId` must exactly match the link's `?centre=` value.
 </details>
 
+## Result delivery
+
+`saveTrialResult` (`src/firebase/results.js`) retries the Firestore write a few times before giving up. If it still fails — an ad blocker/privacy extension blocking `firestore.googleapis.com` is the common case — the result is queued in `localStorage` instead of being lost silently, and `App.jsx` retries any queued results (`flushPendingTrialResults`) on the next page load in that same browser. The candidate always reaches the results screen either way, since scores are computed client-side before the save is attempted.
+
 ## Notes
 
 - SiteGround caches aggressively — hard refresh (Ctrl+Shift+R) after deploys
+- The splash page currently carries a trial-phase notice telling candidates not to treat their result as meaningful yet — remove it (`.trial-notice` block in `Home.jsx`/`App.css`) once the item bank is validated and this moves out of the trial phase
 
 ## Last updated
 
-2026-07-18 (added centre portal + admin UI to provision centres)
+2026-09-16 (retry + local fallback queue for trial result saves; added trial-phase notice to splash page)

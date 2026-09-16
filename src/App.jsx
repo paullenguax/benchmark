@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Test from './pages/Test'
@@ -5,9 +6,14 @@ import Results from './pages/Results'
 import Trial from './pages/Trial'
 import TrialResults from './pages/TrialResults'
 import Centre from './pages/Centre'
+import { flushPendingTrialResults } from './firebase/results'
 import './App.css'
 
 export default function App() {
+  useEffect(() => {
+    flushPendingTrialResults()
+  }, [])
+
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>

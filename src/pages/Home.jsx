@@ -34,6 +34,11 @@ export default function Home() {
 
       <main id="main-content">
         <section className="home-intro" aria-label="About this test">
+          <p className="trial-notice">
+            This is a trial version while we gather data on how well the test items work —
+            please don&apos;t treat your result as a meaningful or reliable indicator of your
+            level at this stage. Feel free to take it out of interest, though!
+          </p>
           <p>
             This free screener aims to give an indicative language proficiency level (4–6)
             based on multiple choice questions. It takes approximately 10–15 minutes.

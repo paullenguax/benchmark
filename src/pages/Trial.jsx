@@ -35,11 +35,9 @@ export default function Trial() {
       selfReportedLevel,
       centreId,
     }
-    try {
-      await saveTrialResult(fullResult)
-    } catch {
-      // save failure is non-critical — still show results
-    }
+    // saveTrialResult retries internally and queues locally on failure — it
+    // never throws, so the candidate always reaches their results.
+    await saveTrialResult(fullResult)
     navigate('/trial-results', { state: { result: fullResult, candidateName, candidateEmail, itemsById: itemMap } })
   }
 

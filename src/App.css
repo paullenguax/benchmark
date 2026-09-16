@@ -116,6 +116,15 @@ code {
   color: var(--text-muted);
 }
 
+.trial-notice {
+  background: var(--brand-light-bg);
+  border-left: 3px solid var(--brand);
+  border-radius: 6px;
+  padding: 0.85rem 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 .candidate-section {
   background: var(--bg-surface);
   border: 1px solid var(--border);
